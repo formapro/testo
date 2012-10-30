@@ -1,13 +1,14 @@
 Testo
 =====
 
-Do you remember those outdated examples in a documentation?. 
-Or times while updating documents you had to test examples manually? 
+* Do you remember those outdated examples in a documentation?. 
+* Or times while updating documents you had to test examples manually? 
+
 This days in the past. 
-Testo can replace a placeholder with a method code.
+Testo come into play.
 
 Example 
-======
+=======
 
 Let's say you have a README.md.template:
 
@@ -32,6 +33,7 @@ class ReadmeExamples
         echo 'hello world!';
     }
 }
+```
 
 So after testo did his job you will get:
 
