@@ -1,7 +1,8 @@
 Testo
 =====
 
-Do you remember that outdated\not working examples in a documentation. 
+Do you remember those outdated examples in a documentation?. 
+Or times while updating documents you had to test examples manually? 
 This days in the past. 
 Testo can replace a placeholder with a method code.
 
