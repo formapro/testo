@@ -14,10 +14,9 @@ Let's say you have a README.md.template:
 ```
 Some description of the awesome code:
 
-```php
 <?php
 {{testo:ReadmeExamples::awesomeExample}}
-```
+?>
 ```
 
 and there is a class: 
@@ -39,12 +38,11 @@ So after testo did his job you will get:
 ```
 Some description of the awesome code:
 
-```php
 <?php
 //Source: ReadmeExamples::awesomeExample
 
 echo 'hello world!';
-```
+?>
 ```
 
 Running
