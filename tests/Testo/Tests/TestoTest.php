@@ -23,9 +23,8 @@ class TestoTest extends \PHPUnit_Framework_TestCase
     {
         $actualFile = tempnam(sys_get_temp_dir(), 'testo');
         
-        $testo = new Testo($templateFile);
-        
-        $testo->generate($actualFile);
+        $testo = new Testo();
+        $testo->generate($templateFile, $actualFile);
         
         $this->assertFileEquals($expectedFile, $actualFile);
     }

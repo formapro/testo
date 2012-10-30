@@ -3,16 +3,9 @@ namespace Testo;
 
 class Testo
 {
-    protected $templateFile;
-    
-    public function __construct($templateFile)
-    {
-        $this->templateFile = $templateFile;
-    }
-        
-    public function generate($documentFile)
+    public function generate($templateFile, $documentFile)
     {    
-        $template = $document = file_get_contents($this->templateFile);
+        $template = $document = file_get_contents($templateFile);
 
         $placeholders =array();
         if (preg_match_all('/\{\{\s*?testo:([^\s]+)\:\:([^\s]+)\s*?\}\}/', $template, $placeholders)) {
