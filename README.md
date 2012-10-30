@@ -35,7 +35,7 @@ class ReadmeExamples
 }
 ```
 
-So after you run `Testo` there will be clean ``README.md`:
+So after you run `Testo` there will be clean `README.md`:
 
 ```
 Some description of the awesome code:
