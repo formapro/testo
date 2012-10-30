@@ -58,5 +58,5 @@ What's inside?
 
 $testo = new \Testo\Testo();
 
-$testo->generate('path_to_template', 'path_to_document');
+$testo->generate(__DIR__'/README.md.template', __DIR__.'/README.md');
 ```
