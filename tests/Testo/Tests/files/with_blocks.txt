@@ -1,0 +1,6 @@
+Some text
+Some text
+//Source: Testo\Tests\files\Example::exampleBlocks()
+        $helloWorld->say();
+Some text
+Some text

@@ -1,0 +1,16 @@
+{
+    "name": "fp/testo",
+    "type": "library",
+    "description": "Extract test as example and put them to doc",
+    "keywords": ["doc", "test", "example"],
+    "homepage": "https://github.com/formapro/testo",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "Testo": "src/"
+        }
+    }
+}
