@@ -1,4 +1,4 @@
-Testo
+Testo [![Build Status](https://secure.travis-ci.org/formapro/testo.png?branch=master)](http://travis-ci.org/formapro/testo)
 =====
 
 Do you remember those outdated examples in a documentation?.
