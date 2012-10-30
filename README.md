@@ -10,7 +10,7 @@ Testo come into play.
 Example 
 =======
 
-Let's say you have a README.md.template:
+Let's say you have a `README.md.template`:
 
 ```
 Some description of the awesome code:
@@ -35,7 +35,7 @@ class ReadmeExamples
 }
 ```
 
-So after testo did his job you will get:
+So after `Testo` did you will get clean ``README.md:
 
 ```
 Some description of the awesome code:
@@ -47,11 +47,13 @@ echo 'hello world!';
 ?>
 ```
 
-Running
-=======
+What's inside?
+==============
 
 ```php
 <?php
+//generate-doc.php
+
 //include autoload.
 
 $testo = new \Testo\Testo();
