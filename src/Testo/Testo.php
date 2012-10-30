@@ -89,12 +89,19 @@ class Testo
         $methodCode = ltrim($methodCode, "\n");
         $methodCode = rtrim($methodCode, "\n ");
         
+        
+        $placeholders = array();
+        if (preg_match('/^(\s*?)[^\s]/', $methodCode, $placeholders)) {
+            $methodCode = preg_replace("/^$placeholders[1]/", '', $methodCode);
+            $methodCode = str_replace("\n$placeholders[1]", "\n", $methodCode);
+        }
+        
         return $methodCode;
     }
     
     protected function addSourceComment($class, $method, $methodCode)
     {
-        $methodCode = "//Source: $class::$method()\n".$methodCode;
+        $methodCode = "//Source: $class::$method()\n\n".$methodCode;
 
         return $methodCode;
     }

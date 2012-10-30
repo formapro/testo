@@ -1,8 +1,9 @@
 Some text
 Some text
 //Source: Testo\Tests\files\Example::helloWorld()
-        $helloWorld = new \HelloWorld;
-        
-        $helloWorld->say();
+
+$helloWorld = new \HelloWorld;
+
+$helloWorld->say();
 Some text
 Some text
