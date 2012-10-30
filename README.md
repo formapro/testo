@@ -1,11 +1,11 @@
 Testo
 =====
 
-* Do you remember those outdated examples in a documentation?. 
-* Or times while updating documents you had to test examples manually? 
+Do you remember those outdated examples in a documentation?.
+ 
+Or times while updating documents you had to test examples manually? 
 
-This days in the past. 
-Testo come into play.
+This days in the past. Testo come into play.
 
 Example 
 =======
