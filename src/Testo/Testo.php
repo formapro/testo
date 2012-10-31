@@ -3,23 +3,55 @@ namespace Testo;
 
 class Testo
 {
+    protected $rootDir;
+    
+    public function __construct($rootDir)
+    {
+        $this->rootDir = $rootDir;
+    }
+    
     public function generate($templateFile, $documentFile)
     {    
-        $template = $document = file_get_contents($templateFile);
+        $document = $this->replaceMethods(file_get_contents($templateFile));
+        $document = $this->replaceFiles($document);
 
+        file_put_contents($documentFile, $document);
+    }
+    
+    protected function replaceMethods($template)
+    {
+        $document = $template;
+        
         $placeholders =array();
         if (preg_match_all('/\{\{\s*?testo:([^\s]+)\:\:([^\s]+)\s*?\}\}/', $template, $placeholders)) {
             foreach($placeholders[1] as $index => $class) {
                 $method = $placeholders[2][$index];
                 $placeholder = $placeholders[0][$index];
-                
+
                 $methodCode = $this->doGenerateMethodCode($class, $method);
-                
+
                 $document = str_replace($placeholder, $methodCode, $document);
             }
         }
 
-        file_put_contents($documentFile, $document);
+        return $document;
+    }
+    
+    protected function replaceFiles($template)
+    {
+        $document = $template;
+
+        $placeholders =array();
+        if (preg_match_all('/\{\{\s*?testo:(.+\/.+)\}\}/', $template, $placeholders)) {
+            foreach($placeholders[1] as $index => $relativePath) {
+                $absolutePath = $this->rootDir.'/'.$relativePath;
+                $placeholder = $placeholders[0][$index];
+
+                $document = str_replace($placeholder, file_get_contents($absolutePath), $document);
+            }
+        }
+
+        return $document;
     }
     
     protected function doGenerateMethodCode($class, $method)

@@ -1,0 +1,5 @@
+foo:
+    - fooKey: fooValue
+    - barKey: barValue
+
+baz: baz

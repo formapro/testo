@@ -1,0 +1,9 @@
+Some text
+Some text
+foo:
+    - fooKey: fooValue
+    - barKey: barValue
+
+baz: baz
+Some text
+Some text

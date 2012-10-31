@@ -13,38 +13,19 @@ Example
 Let's say you have a `README.md.template`:
 
 ```
-Some description of the awesome code:
-
-<?php
-{{testo:Testo\Examples\Hello::world}}
-?>
+{{testo:tests/Testo/Examples/README.md.template}}
 ```
 
 and there is a class: 
 
 ```php
-<?php
-namespace Testo\Examples;
-
-class Hello
-{
-    public function world()
-    {
-        echo 'hello world!';
-    }
-}
+{{testo:tests/Testo/Examples/Hello.php}}
 ```
 
 So after you run `Testo` there will be clean `README.md`:
 
 ```
-Some description of the awesome code:
-
-<?php
-//Source: Testo\Examples\Hello::world()
-
-echo 'hello world!';
-?>
+{{testo:tests/Testo/Examples/README.md.expected}}
 ```
 
 What's inside?
@@ -52,11 +33,5 @@ What's inside?
 
 ```php
 <?php
-//Source: Testo\Examples\ReadmeTest::whatsInside()
-
-//include autoload.
-
-$testo = new \Testo\Testo($rootDir = __DIR__);
-
-$testo->generate(__DIR__.'/README.md.template', __DIR__.'/README.md');
+{{testo:Testo\Examples\ReadmeTest::whatsInside}}
 ```

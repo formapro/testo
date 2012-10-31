@@ -12,3 +12,6 @@ EOM;
 }
 
 $loader->add('Testo\Tests', __DIR__);
+$loader->add('Testo\Examples', __DIR__);
+
+\Testo\Phpunit\ReGenerateDocsOnSuccessListener::setRootDir(realpath(__DIR__.'/../'));
