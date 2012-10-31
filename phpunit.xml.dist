@@ -27,6 +27,9 @@
         <testsuite name="Testo Tests">
             <directory>./tests</directory>
         </testsuite>
+        <testsuite name="Testo Examples">
+            <directory>./examples</directory>
+        </testsuite>
     </testsuites>
 
     <filter>

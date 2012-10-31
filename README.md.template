@@ -13,19 +13,19 @@ Example
 Let's say you have a `README.md.template`:
 
 ```
-{{testo:tests/Testo/Examples/README.md.template}}
+{{testo:examples/Testo/Examples/README.md.template}}
 ```
 
 and there is a class: 
 
 ```php
-{{testo:tests/Testo/Examples/Hello.php}}
+{{testo:examples/Testo/Examples/Hello.php}}
 ```
 
 So after you run `Testo` there will be clean `README.md`:
 
 ```
-{{testo:tests/Testo/Examples/README.md.expected}}
+{{testo:examples/Testo/Examples/README.md.expected}}
 ```
 
 What's inside?
