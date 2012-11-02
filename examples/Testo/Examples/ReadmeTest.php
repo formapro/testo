@@ -12,7 +12,7 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
         //@testo:start
         //include autoload.
 
-        $testo = new \Testo\Testo($rootDir = __DIR__);
+        $testo = new \Testo\Testo();
 
         $testo->generate(__DIR__.'/README.md.template', __DIR__.'/README.md');
         //@testo:end

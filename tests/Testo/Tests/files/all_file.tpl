@@ -1,5 +1,5 @@
 Some text
 Some text
-{{testo:files/config.yml}}
+{{testo:config.yml}}
 Some text
 Some text

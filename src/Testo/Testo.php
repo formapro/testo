@@ -2,18 +2,11 @@
 namespace Testo;
 
 class Testo
-{
-    protected $rootDir;
-    
-    public function __construct($rootDir)
-    {
-        $this->rootDir = $rootDir;
-    }
-    
+{   
     public function generate($templateFile, $documentFile)
     {    
         $document = $this->replaceMethods(file_get_contents($templateFile));
-        $document = $this->replaceFiles($document);
+        $document = $this->replaceFiles($document, dirname($templateFile));
 
         file_put_contents($documentFile, $document);
     }
@@ -37,14 +30,14 @@ class Testo
         return $document;
     }
     
-    protected function replaceFiles($template)
+    protected function replaceFiles($template, $rootDir)
     {
         $document = $template;
 
         $placeholders =array();
-        if (preg_match_all('/\{\{\s*?testo:(.+\/.+)\}\}/', $template, $placeholders)) {
+        if (preg_match_all('/\{\{\s*?testo:(.+\/?.+)\}\}/', $template, $placeholders)) {
             foreach($placeholders[1] as $index => $relativePath) {
-                $absolutePath = $this->rootDir.'/'.$relativePath;
+                $absolutePath = $rootDir.'/'.$relativePath;
                 $placeholder = $placeholders[0][$index];
 
                 $document = str_replace($placeholder, file_get_contents($absolutePath), $document);
