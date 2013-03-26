@@ -51,7 +51,6 @@ class Testo
     {
         $methodCode = $this->collectMethodCode(new \ReflectionMethod($class, $method));
         $methodCode = $this->filterMethodCode($methodCode);
-        $methodCode = $this->addSourceComment($class, $method, $methodCode);
         
         return $methodCode;
     }
@@ -64,8 +63,22 @@ class Testo
     protected function collectMethodCode(\ReflectionMethod $rm)
     {
         $methodCodeLines = $this->extractMethodLines($rm);
+
+        foreach($methodCodeLines as &$methodCodeLine) {
+            if (false !== strpos($methodCodeLine, '//@testo:source')) {
+                $methodCodeLine = str_replace(
+                    '//@testo:source', 
+                    '//Source: '.$rm->getDeclaringClass()->getName().'::'.$rm->getName().'()',
+                    $methodCodeLine
+                );
+            }
+            if (false !== strpos($methodCodeLine, '//@testo:uncomment:')) {
+                $methodCodeLine = str_replace('//@testo:uncomment:', '', $methodCodeLine);
+            }
+        }
         
         $hasInstruction = false !== strpos(implode("", $methodCodeLines), '//@testo');
+        
         $methodCode = '';
         if ($hasInstruction) {
             $blockStarted = false;
@@ -73,11 +86,11 @@ class Testo
                 if (false !== strpos($methodCodeLine, '//@testo:end')) {
                     $blockStarted = false;
                 }
-                
+
                 if ($blockStarted) {
                     $methodCode .= $methodCodeLine;
                 }
-                
+
                 if (false !== strpos($methodCodeLine, '//@testo:start')) {
                     $blockStarted = true; 
                 }
@@ -114,13 +127,6 @@ class Testo
             $methodCode = str_replace("\n$placeholders[1]", "\n", $methodCode);
         }
         
-        return $methodCode;
-    }
-    
-    protected function addSourceComment($class, $method, $methodCode)
-    {
-        $methodCode = "//Source: $class::$method()\n\n".$methodCode;
-
         return $methodCode;
     }
 }
