@@ -12,7 +12,10 @@ class ReGenerateDocsOnSuccessListener implements \PHPUnit_Framework_TestListener
     protected $documentsFiles;
     
     protected static $rootDir;
-    
+
+    /** @var  Testo */
+    protected $testo;
+
     public function __construct(array $documentsFiles)
     {
         if (false == self::$rootDir) {
@@ -55,10 +58,8 @@ class ReGenerateDocsOnSuccessListener implements \PHPUnit_Framework_TestListener
     public function endTestSuite(\PHPUnit_Framework_TestSuite $suite)
     {
         if ($this->rootSuite === $suite && $this->isSuccess) {
-            $testo = new Testo();
-            
-            
-            
+            $testo = $this->getTestoInstance();
+
             foreach ($this->documentsFiles as $templateFile => $documentFile) {
                 $testo->generate(
                     static::$rootDir.'/'.$templateFile,
@@ -74,5 +75,45 @@ class ReGenerateDocsOnSuccessListener implements \PHPUnit_Framework_TestListener
 
     public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
+    }
+
+    /**
+     * @param Testo $testo
+     */
+    public function setTestoInstance(Testo $testo)
+    {
+        $this->testo=$testo;
+    }
+
+    /**
+     * @return Testo
+     */
+    public function getTestoInstance()
+    {
+        if($this->testo===null)
+            $this->testo=new Testo();
+
+        return $this->testo;
+    }
+
+    public static function getRootDir()
+    {
+        return self::$rootDir;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsSuccess()
+    {
+        return $this->isSuccess;
+    }
+
+    /**
+     * @param bool $isSuccess
+     */
+    public function setIsSuccess($isSuccess)
+    {
+        $this->isSuccess=$isSuccess;
     }
 }
