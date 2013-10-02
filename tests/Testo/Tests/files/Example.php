@@ -3,17 +3,38 @@ namespace Testo\Tests\files;
 
 class Example
 {
-    public function helloWorld() 
+    public function helloWorld()
     {
         $helloWorld = new \HelloWorld;
-        
+
         $helloWorld->say();
     }
 
-    public function exampleBlocks() {
+    public function exampleBlocks()
+    {
         $helloWorld = new \HelloWorld;
         //@testo:start
         $helloWorld->say();
         //@testo:end
+    }
+
+    public function exampleSource()
+    {
+
+        //@testo:source
+        $helloWorld = new \HelloWorld;
+
+        $helloWorld->say();
+
+    }
+
+    public function exampleUncomment()
+    {
+
+        //@testo:uncomment:use \Foo\Bar;
+        $bar = new Bar;
+
+        $bar->baz();
+
     }
 }

@@ -41,8 +41,6 @@ So after you run `Testo` there will be clean `README.md`:
 Some description of the awesome code:
 
 <?php
-//Source: Testo\Examples\Hello::world()
-
 echo 'hello world!';
 ?>
 ```
@@ -52,8 +50,6 @@ What's inside?
 
 ```php
 <?php
-//Source: Testo\Examples\ReadmeTest::whatsInside()
-
 //include autoload.
 
 $testo = new \Testo\Testo();
