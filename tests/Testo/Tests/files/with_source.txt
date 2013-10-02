@@ -1,5 +1,6 @@
 Some text
 Some text
+//Source: Testo\Tests\files\Example::exampleSource()
 $helloWorld = new \HelloWorld;
 
 $helloWorld->say();
