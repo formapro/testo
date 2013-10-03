@@ -6,10 +6,11 @@ class Testo
     protected $templateMethodTagRegExp = '/^\s*@testo\s+([^\s]+)\s+([^\s]+)\s*$/m';
     protected $templateFileTagRegExp = '/^\s*@testo\s+([^\s]+)\s*$/m';
 
-    protected $sourceBeginBlockTagRegExp = '|//\s*@testo\s+{\s*$|m';
-    protected $sourceEndBlockTagRegExp = '|//\s*@testo\s+}\s*$|m';
-    protected $sourceUncommentTagRegExp = '|(//\s*@testo\s+uncomment\s*)|';
-    protected $sourceSourceTagRegExp = '|(//\s*@testo\s+source)|';
+    protected $sourceBeginBlockTagRegExp = '|//\s*@testo\s*{\s*$|m';
+    protected $sourceEndBlockTagRegExp = '|//\s*@testo\s*}\s*$|m';
+    protected $sourceSourceTagRegExp = '|//\s*@testo\s+source|';
+
+    protected $sourceUncommentTagRegExp = '|//\s*@testo\s+uncomment\s*|';
 
     public function generate($templateFile, $documentFile)
     {
@@ -75,13 +76,13 @@ class Testo
         foreach ($methodCodeLines as &$methodCodeLine) {
             if (preg_match($this->sourceSourceTagRegExp, $methodCodeLine, $placeholders)) {
                 $methodCodeLine = str_replace(
-                    $placeholders[1],
+                    $placeholders[0],
                     '//Source: ' . $rm->getDeclaringClass()->getName() . '::' . $rm->getName() . '()',
                     $methodCodeLine
                 );
             }
             if (preg_match($this->sourceUncommentTagRegExp, $methodCodeLine, $placeholders)) {
-                $methodCodeLine = str_replace($placeholders[1], '', $methodCodeLine);
+                $methodCodeLine = str_replace($placeholders[0], '', $methodCodeLine);
             }
         }
 
