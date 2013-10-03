@@ -13,15 +13,15 @@ class Example
     public function exampleBlocks()
     {
         $helloWorld = new \HelloWorld;
-        //@testo:start
+        //@testo {
         $helloWorld->say();
-        //@testo:end
+        //@testo }
     }
 
     public function exampleSource()
     {
 
-        //@testo:source
+        //@testo source
         $helloWorld = new \HelloWorld;
 
         $helloWorld->say();
@@ -31,7 +31,7 @@ class Example
     public function exampleUncomment()
     {
 
-        //@testo:uncomment:use \Foo\Bar;
+        //@testo uncomment use \Foo\Bar;
         $bar = new Bar;
 
         $bar->baz();
