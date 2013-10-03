@@ -14,10 +14,13 @@ class Testo
     protected $sourceBeginUncommentTagRegExp = '|(//\s*@testo\s+uncomment\s*{\s*)|';
     protected $sourceEndUncommentTagRegExp = '|(//\s*@testo\s+uncomment\s*}\s*)|';
 
+    protected $templateClassTagRegExp = '/^\s*@testo\s+([^\s]+)\s*$/m';
+
     public function generate($templateFile, $documentFile)
     {
         $document = $this->replaceMethods(file_get_contents($templateFile));
         $document = $this->replaceFiles($document, dirname($templateFile));
+        $document = $this->replaceClasses($document);
 
         file_put_contents($documentFile, $document);
     }
@@ -51,7 +54,33 @@ class Testo
                 $absolutePath = $rootDir . '/' . $relativePath;
                 $placeholder = $placeholders[0][$index];
 
-                $document = str_replace($placeholder, file_get_contents($absolutePath), $document);
+                if (is_file($absolutePath)) {
+                    $document = str_replace($placeholder, file_get_contents($absolutePath), $document);
+                }
+            }
+        }
+
+        return $document;
+    }
+
+    protected function replaceClasses($template)
+    {
+        $document = $template;
+
+        $placeholders = array();
+        if (preg_match_all($this->templateClassTagRegExp, $template, $placeholders)) {
+            foreach ($placeholders[1] as $index => $className) {
+
+                if (class_exists($className)) {
+                    $code = $this->collectClassCode(new \ReflectionClass($className));
+                    $placeholder = $placeholders[0][$index];
+                    $document = str_replace($placeholder, $code, $document);
+                }
+
+//
+//                if (is_file($absolutePath)) {
+//                    $document = str_replace($placeholder, file_get_contents($absolutePath), $document);
+//                }
             }
         }
 
@@ -188,5 +217,18 @@ class Testo
         }
 
         return $blockLines;
+    }
+
+    public function collectClassCode(\ReflectionClass $reflectionClass)
+    {
+        $fileLines = file($reflectionClass->getFileName());
+        $fileStartLine = $reflectionClass->getStartLine();
+        $fileEndLine = $reflectionClass->getEndLine();
+        $code = '';
+        for ($i = $fileStartLine - 1; $i < $fileEndLine; $i++) {
+            $code .= $fileLines[$i];
+        }
+
+        return $code;
     }
 }
