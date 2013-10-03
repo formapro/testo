@@ -20,6 +20,7 @@ class ReGenerateDocsOnSuccessListener implements \PHPUnit_Framework_TestListener
 
     public function __construct(array $documentsFiles)
     {
+        $this->testo=new Testo();
         if (false == self::$rootDir) {
             self::$rootDir = getcwd();
         }
@@ -60,10 +61,9 @@ class ReGenerateDocsOnSuccessListener implements \PHPUnit_Framework_TestListener
     public function endTestSuite(\PHPUnit_Framework_TestSuite $suite)
     {
         if ($this->rootSuite === $suite && $this->isSuccess) {
-            $testo = $this->getTesto();
 
             foreach ($this->documentsFiles as $templateFile => $documentFile) {
-                $testo->generate(
+                $this->testo->generate(
                     static::$rootDir . '/' . $templateFile,
                     static::$rootDir . '/' . $documentFile
                 );
@@ -87,15 +87,4 @@ class ReGenerateDocsOnSuccessListener implements \PHPUnit_Framework_TestListener
         $this->testo = $testo;
     }
 
-    /**
-     * @return Testo
-     */
-    public function getTesto()
-    {
-        if (!$this->testo) {
-            $this->testo = new Testo();
-        }
-
-        return $this->testo;
-    }
 }

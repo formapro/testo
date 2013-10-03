@@ -1,24 +1,19 @@
 <?php
 
-namespace Testo\Tests;
+namespace Testo\Tests\Phpunit;
 
 use Testo\Phpunit\ReGenerateDocsOnSuccessListener;
 use Testo\Testo;
 
 class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
 {
-    private $documents = array(
-        'doc1' => 'doc1',
-        'doc2' => 'doc2',
-        'doc3' => 'doc3'
-    );
 
     private static $oldRootDir;
 
 
     public static function setUpBeforeClass()
     {
-        self::$oldRootDir = self::getListenerPropertyValueViaReflection(null, 'rootDir');
+        self::$oldRootDir = self::readAttribute('Testo\Phpunit\ReGenerateDocsOnSuccessListener', 'rootDir');
     }
 
     public static function tearDownAfterClass()
@@ -36,7 +31,7 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function couldBeConstructedWithDocumentsAsFirstArgument()
     {
-        $listener = new ReGenerateDocsOnSuccessListener($this->documents);
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array());
 
         $this->assertTrue($listener instanceof ReGenerateDocsOnSuccessListener);
     }
@@ -44,15 +39,24 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function shouldCreateTestoInstanceInConstructor()
+    {
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array());
+
+        $this->assertAttributeInstanceOf('Testo\Testo', 'testo', $listener);
+    }
+
+    /**
+     * @test
+     */
     public function shouldAllowSetTesto()
     {
-        $listener = new ReGenerateDocsOnSuccessListener($this->documents);
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array());
         $testoMock = $this->createTestoMock();
         $listener->setTesto($testoMock);
-        $actualTesto = $listener->getTesto();
 
-        $this->assertTrue($listener->getTesto() instanceof Testo);
-        $this->assertSame($testoMock, $actualTesto);
+        $this->assertAttributeInstanceOf('Testo\Testo', 'testo', $listener);
+        $this->assertAttributeSame($testoMock, 'testo', $listener);
     }
 
     /**
@@ -62,9 +66,8 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
     {
         $rootDir = 'path/to/somewhere';
         ReGenerateDocsOnSuccessListener::setRootDir($rootDir);
-        $actualRootDir = self::getListenerPropertyValueViaReflection(null, 'rootDir');
 
-        $this->assertEquals($rootDir, $actualRootDir);
+        $this->assertAttributeEquals($rootDir, 'rootDir', 'Testo\Phpunit\ReGenerateDocsOnSuccessListener');
     }
 
     /**
@@ -72,7 +75,7 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldSetCurrentWorkingDirectoryAsDefaultRootDirUsingInConstructor()
     {
-        $listener = new ReGenerateDocsOnSuccessListener($this->documents);
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array());
 
         $this->assertAttributeEquals(getcwd(), 'rootDir', $listener);
     }
@@ -82,8 +85,13 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldIsSuccessBeFalseOnAddError()
     {
-        $listener = new ReGenerateDocsOnSuccessListener($this->documents);
-        self::setListenerPropertyValueViaReflection($listener, 'isSuccess', true);
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array());
+
+
+        //guard
+        $this->assertAttributeEquals(true, 'isSuccess', $listener);
+
+
         $listener->addError($this->createFrameworkTestMock(), new \Exception(), time());
 
         $this->assertAttributeEquals(false, 'isSuccess', $listener);
@@ -94,8 +102,12 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldIsSuccessBeFalseOnAddFailure()
     {
-        $listener = new ReGenerateDocsOnSuccessListener($this->documents);
-        self::setListenerPropertyValueViaReflection($listener, 'isSuccess', true);
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array());
+
+        //guard
+        $this->assertAttributeEquals(true, 'isSuccess', $listener);
+
+
         $listener->addFailure($this->createFrameworkTestMock(), new \PHPUnit_Framework_AssertionFailedError(), time());
 
         $this->assertAttributeEquals(false, 'isSuccess', $listener);
@@ -106,8 +118,10 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldDoNothingOnAddIncompleteTest()
     {
-        $listener = new ReGenerateDocsOnSuccessListener($this->documents);
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array());
         $listener->addIncompleteTest($this->createFrameworkTestMock(), new \Exception(), time());
+
+        $this->assertAttributeEquals(true, 'isSuccess', $listener);
     }
 
     /**
@@ -115,8 +129,10 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldDoNothingOnAddSkippedTest()
     {
-        $listener = new ReGenerateDocsOnSuccessListener($this->documents);
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array());
         $listener->addSkippedTest($this->createFrameworkTestMock(), new \Exception(), time());
+
+        $this->assertAttributeEquals(true, 'isSuccess', $listener);
     }
 
     /**
@@ -124,8 +140,10 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldDoNothingOnStartTest()
     {
-        $listener = new ReGenerateDocsOnSuccessListener($this->documents);
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array());
         $listener->startTest($this->createFrameworkTestMock());
+
+        $this->assertAttributeEquals(true, 'isSuccess', $listener);
     }
 
     /**
@@ -133,8 +151,10 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldDoNothingOnEndTest()
     {
-        $listener = new ReGenerateDocsOnSuccessListener($this->documents);
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array());
         $listener->endTest($this->createFrameworkTestMock(), time());
+
+        $this->assertAttributeEquals(true, 'isSuccess', $listener);
     }
 
     /**
@@ -142,8 +162,9 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCallGenerateMethodOnceForOneDocumentWithCorrectParams()
     {
-        $listener = new ReGenerateDocsOnSuccessListener(array('path1' => 'path2'));
-        $listenerRootDir = self::getListenerPropertyValueViaReflection(null, 'rootDir');
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array('path1' => 'path2'));
+        $listenerRootDir = $this->readAttribute('Testo\Phpunit\ReGenerateDocsOnSuccessListener', 'rootDir');
+
         $testoMock = $this->createTestoMock();
         $testoMock->expects($this->once())
             ->method('generate')
@@ -154,7 +175,6 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
         $listener->setTesto($testoMock);
         $listener->startTestSuite($testSuitMock);
         $listener->endTestSuite($testSuitMock);
-
     }
 
     /**
@@ -162,12 +182,16 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldNotCallGenerateMethodIfAtLeastOneTestFail()
     {
-        $listener = new ReGenerateDocsOnSuccessListener($this->documents);
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array());
 
         $testoMock = $this->createTestoMock();
         $testoMock->expects($this->never())
             ->method('generate');
         $testSuitMock = $this->createFrameworkTestSuiteMock();
+
+        //guard
+        $this->assertAttributeEquals(true, 'isSuccess', $listener);
+
 
         $listener->setTesto($testoMock);
         $listener->startTestSuite($testSuitMock);
@@ -178,32 +202,52 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldCallGenerateOnlyInRootTestSuite()
+    public function shouldCallGenerateInRootTestSuite()
     {
-        $listener = new ReGenerateDocsOnSuccessListener($this->documents);
+        $documents = array(
+            'doc1' => 'doc1',
+            'doc2' => 'doc2',
+            'doc3' => 'doc3'
+        );
+        $listener = new ReGenerateDocsOnSuccessListener($documents);
+        $testSuitMock = $this->createFrameworkTestSuiteMock();
+
+        $testoMock = $this->createTestoMock();
+        $testoMock->expects($this->exactly(count($documents)))
+            ->method('generate');
+
+        $listener->setTesto($testoMock);
+        $listener->startTestSuite($testSuitMock);
+
+        //guard
+        $this->assertAttributeSame($testSuitMock, 'rootSuite', $listener);
+        $this->assertAttributeEquals(true, 'isSuccess', $listener);
+
+
+        $listener->endTestSuite($testSuitMock);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotCallGenerateIfInNotRootTestSuite()
+    {
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array());
         $testoMock = $this->createTestoMock();
         $testoMock->expects($this->never())
             ->method('generate');
 
-        self::setListenerPropertyValueViaReflection($listener, 'isSuccess', true);
 
         $testSuitMock = $this->createFrameworkTestSuiteMock();
         $testSuitMock2 = $this->createFrameworkTestSuiteMock();
 
         $listener->setTesto($testoMock);
         $listener->startTestSuite($testSuitMock);
-        $this->assertNotSame($testSuitMock2, self::getListenerPropertyValueViaReflection($listener, 'rootSuite'));
+
+        $this->assertAttributeNotSame($testSuitMock2, 'rootSuite', $listener);
+        $this->assertAttributeEquals(true, 'isSuccess', $listener);
+
         $listener->endTestSuite($testSuitMock2);
-
-        $testoMock = $this->createTestoMock();
-        $testoMock->expects($this->exactly(count($this->documents)))
-            ->method('generate');
-
-        $listener->setTesto($testoMock);
-        $listener->startTestSuite($testSuitMock);
-        $this->assertSame($testSuitMock, self::getListenerPropertyValueViaReflection($listener, 'rootSuite'));
-        $listener->endTestSuite($testSuitMock);
-
     }
 
     /**
@@ -228,35 +272,6 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
     protected function createFrameworkTestSuiteMock()
     {
         return $this->getMock('PHPUnit_Framework_TestSuite');
-    }
-
-    /**
-     * @param ReGenerateDocsOnSuccessListener $listener
-     * @param string $propertyName
-     * @param mixed $value
-     */
-    protected static function setListenerPropertyValueViaReflection(
-        ReGenerateDocsOnSuccessListener $listener = null,
-        $propertyName,
-        $value
-    ) {
-        $rp = new \ReflectionProperty('Testo\Phpunit\ReGenerateDocsOnSuccessListener', $propertyName);
-        $rp->setAccessible(true);
-        $rp->setValue($listener, $value);
-    }
-
-    /**
-     * @param ReGenerateDocsOnSuccessListener $listener
-     * @param string $propertyName
-     * @return mixed
-     */
-    protected static function getListenerPropertyValueViaReflection(
-        ReGenerateDocsOnSuccessListener $listener = null,
-        $propertyName
-    ) {
-        $rp = new \ReflectionProperty('Testo\Phpunit\ReGenerateDocsOnSuccessListener', $propertyName);
-        $rp->setAccessible(true);
-        return $rp->getValue($listener);
     }
 
 }
