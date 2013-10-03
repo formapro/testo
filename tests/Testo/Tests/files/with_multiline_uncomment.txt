@@ -1,0 +1,9 @@
+Some text
+Some text
+use \Foo\Bar;
+use \Foo\Baz;
+$bar = new Bar;
+
+$bar->baz();
+Some text
+Some text

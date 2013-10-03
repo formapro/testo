@@ -37,4 +37,17 @@ class Example
         $bar->baz();
 
     }
+
+    public function exampleMultiLinedUncomment()
+    {
+
+        //@testo uncomment {
+        //use \Foo\Bar;
+        //use \Foo\Baz;
+        //@testo uncomment }
+        $bar = new Bar;
+
+        $bar->baz();
+
+    }
 }

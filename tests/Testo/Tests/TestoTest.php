@@ -14,6 +14,7 @@ class TestoTest extends \PHPUnit_Framework_TestCase
             array(__DIR__ . '/files/all_file.tpl', __DIR__ . '/files/all_file.txt'),
             array(__DIR__ . '/files/with_source.tpl', __DIR__ . '/files/with_source.txt'),
             array(__DIR__ . '/files/with_uncomment.tpl', __DIR__ . '/files/with_uncomment.txt'),
+            array(__DIR__ . '/files/with_multiline_uncomment.tpl', __DIR__ . '/files/with_multiline_uncomment.txt'),
         );
     }
 

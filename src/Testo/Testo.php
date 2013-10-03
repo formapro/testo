@@ -11,6 +11,8 @@ class Testo
     protected $sourceSourceTagRegExp = '|//\s*@testo\s+source|';
 
     protected $sourceUncommentTagRegExp = '|//\s*@testo\s+uncomment\s*|';
+    protected $sourceBeginUncommentTagRegExp = '|(//\s*@testo\s+uncomment\s*{\s*)|';
+    protected $sourceEndUncommentTagRegExp = '|(//\s*@testo\s+uncomment\s*}\s*)|';
 
     public function generate($templateFile, $documentFile)
     {
@@ -72,43 +74,12 @@ class Testo
     protected function collectMethodCode(\ReflectionMethod $rm)
     {
         $methodCodeLines = $this->extractMethodLines($rm);
+        $methodCodeLines = $this->uncomment($methodCodeLines);
+        $methodCodeLines = $this->insertSource($methodCodeLines, $rm);
+        $methodCodeLines = $this->leaveBlocksOnly($methodCodeLines);
 
-        foreach ($methodCodeLines as &$methodCodeLine) {
-            if (preg_match($this->sourceSourceTagRegExp, $methodCodeLine, $placeholders)) {
-                $methodCodeLine = str_replace(
-                    $placeholders[0],
-                    '//Source: ' . $rm->getDeclaringClass()->getName() . '::' . $rm->getName() . '()',
-                    $methodCodeLine
-                );
-            }
-            if (preg_match($this->sourceUncommentTagRegExp, $methodCodeLine, $placeholders)) {
-                $methodCodeLine = str_replace($placeholders[0], '', $methodCodeLine);
-            }
-        }
+        return implode("", $methodCodeLines);
 
-        $hasInstruction = false !== strpos(implode("", $methodCodeLines), '//@testo');
-
-        $methodCode = '';
-        if ($hasInstruction) {
-            $blockStarted = false;
-            foreach ($methodCodeLines as $methodCodeLine) {
-                if (preg_match($this->sourceEndBlockTagRegExp, $methodCodeLine, $placeholders)) {
-                    $blockStarted = false;
-                }
-
-                if ($blockStarted) {
-                    $methodCode .= $methodCodeLine;
-                }
-
-                if (preg_match($this->sourceBeginBlockTagRegExp, $methodCodeLine, $placeholders)) {
-                    $blockStarted = true;
-                }
-            }
-        } else {
-            $methodCode = implode("", $methodCodeLines);
-        }
-
-        return $methodCode;
     }
 
     protected function extractMethodLines(\ReflectionMethod $rm)
@@ -137,5 +108,85 @@ class Testo
         }
 
         return $methodCode;
+    }
+
+    protected function uncomment(array $methodCodeLines)
+    {
+        $commentStarted = false;
+        $skipLine = false;
+
+        $codeLinesWithoutMultiLineComments = array();
+        foreach ($methodCodeLines as $methodCodeLine) {
+
+            if (preg_match($this->sourceBeginUncommentTagRegExp, $methodCodeLine, $placeholders)) {
+                $commentStarted = true;
+                $skipLine = true;
+            }
+
+            if (preg_match($this->sourceEndUncommentTagRegExp, $methodCodeLine, $placeholders)) {
+                $commentStarted = false;
+                $skipLine = true;
+            }
+
+            if ($commentStarted) {
+                $methodCodeLine = str_replace('//', '', $methodCodeLine);
+            }
+
+            if ($skipLine) {
+                $skipLine = false;
+            } else {
+                $codeLinesWithoutMultiLineComments[] = $methodCodeLine;
+            }
+
+        }
+
+        foreach ($codeLinesWithoutMultiLineComments as &$methodCodeLine) {
+            if (preg_match($this->sourceUncommentTagRegExp, $methodCodeLine, $placeholders)) {
+                $methodCodeLine = str_replace($placeholders[0], '', $methodCodeLine);
+            }
+
+        }
+
+        return $codeLinesWithoutMultiLineComments;
+    }
+
+    protected function insertSource(array $methodCodeLines, \ReflectionMethod $reflectionMethod)
+    {
+        $source = $reflectionMethod->getDeclaringClass()->getName() . '::' . $reflectionMethod->getName() . '()';
+        foreach ($methodCodeLines as &$methodCodeLine) {
+            if (preg_match($this->sourceSourceTagRegExp, $methodCodeLine, $placeholders)) {
+                $methodCodeLine = str_replace(
+                    $placeholders[0],
+                    '//Source: ' . $source,
+                    $methodCodeLine
+                );
+            }
+        }
+
+        return $methodCodeLines;
+    }
+
+    protected function leaveBlocksOnly(array $methodCodeLines)
+    {
+        $blockStarted = false;
+        $blockLines = array();
+        foreach ($methodCodeLines as $methodCodeLine) {
+            if (preg_match($this->sourceEndBlockTagRegExp, $methodCodeLine, $placeholders)) {
+                $blockStarted = false;
+            }
+
+            if ($blockStarted) {
+                $blockLines[] = $methodCodeLine;
+            }
+
+            if (preg_match($this->sourceBeginBlockTagRegExp, $methodCodeLine, $placeholders)) {
+                $blockStarted = true;
+            }
+        }
+        if (!$blockLines) {
+            return $methodCodeLines;
+        }
+
+        return $blockLines;
     }
 }
