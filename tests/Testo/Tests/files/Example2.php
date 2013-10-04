@@ -1,5 +1,6 @@
-Some text
-Some text
+<?php
+namespace Testo\Tests\files;
+
 class Example2
 {
     public function helloWorld()
@@ -10,5 +11,3 @@ class Example2
     }
 
 }
-Some text
-Some text

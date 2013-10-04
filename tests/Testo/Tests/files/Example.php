@@ -18,16 +18,6 @@ class Example
         //@testo }
     }
 
-    public function exampleSource()
-    {
-
-        //@testo source
-        $helloWorld = new \HelloWorld;
-
-        $helloWorld->say();
-
-    }
-
     public function exampleUncomment()
     {
 

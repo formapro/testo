@@ -20,7 +20,7 @@ class ReGenerateDocsOnSuccessListener implements \PHPUnit_Framework_TestListener
 
     public function __construct(array $documentsFiles)
     {
-        $this->testo=new Testo();
+        $this->testo = new Testo();
         if (false == self::$rootDir) {
             self::$rootDir = getcwd();
         }
