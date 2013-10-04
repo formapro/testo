@@ -44,7 +44,7 @@ class MethodSource extends AbstractSource
             unset($methodCodeLines[0]);
         }
 
-        return $methodCodeLines;
+        return array_values($methodCodeLines);
 
     }
 }
