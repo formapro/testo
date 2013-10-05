@@ -7,12 +7,13 @@ use Testo\Filters\UncommentFilter;
 use Testo\Sources\ClassSource;
 use Testo\Sources\FileSource;
 use Testo\Sources\MethodSource;
-use Testo\Sources\AbstractSource;
+use Testo\Sources\RootDirAwareInterface;
+use Testo\Sources\SourceInterface;
 
-class Testo
+class Testo implements RootDirAwareInterface
 {
     /**
-     * @var AbstractSource[]
+     * @var SourceInterface[]
      */
     protected $sources;
     /**
@@ -31,8 +32,8 @@ class Testo
         $this->filters[] = new LeaveBlocksFilter();
 
         $this->sources[] = new FileSource($this);
-        $this->sources[] = new ClassSource($this);
-        $this->sources[] = new MethodSource($this);
+        $this->sources[] = new ClassSource();
+        $this->sources[] = new MethodSource();
 
     }
 

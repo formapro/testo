@@ -2,7 +2,7 @@
 namespace Testo\Tests\Sources;
 
 use Testo\Sources\FileSource;
-use Testo\Testo;
+use Testo\Sources\RootDirAwareInterface;
 
 class FileSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -12,7 +12,7 @@ class FileSourceTest extends \PHPUnit_Framework_TestCase
     public function shouldReturnArrayOfLinesOfGivenFile()
     {
         $this->assertTrue(true);
-        $testoStub = $this->createTestoStub();
+        $rootDirAwareStub = $this->createRootDirAwareStub();
         $line = '@testo config.yml';
         $expectedContent = array(
             "foo:\n",
@@ -21,17 +21,17 @@ class FileSourceTest extends \PHPUnit_Framework_TestCase
             "\n",
             "baz: baz"
         );
-        $source = new FileSource($testoStub);
+        $source = new FileSource($rootDirAwareStub);
         $result = $source->getContent($line);
         $this->assertEquals($expectedContent, $result);
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Testo
+     * @return \PHPUnit_Framework_MockObject_MockObject|RootDirAwareInterface
      */
-    protected function createTestoStub()
+    protected function createRootDirAwareStub()
     {
-        $stub = $this->getMock('Testo\Testo', array('getRootDir'));
+        $stub = $this->getMock('Testo\Sources\RootDirAwareInterface', array('getRootDir'));
         $stub->expects($this->any())
             ->method('getRootDir')
             ->will($this->returnValue(realpath(__DIR__ . '/../files')));

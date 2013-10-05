@@ -1,7 +1,7 @@
 <?php
 namespace Testo\Sources;
 
-class ClassSource extends AbstractSource
+class ClassSource implements SourceInterface
 {
     protected $classTagRegExp = '/^\s*@testo\s+([^\s]+)\s*$/m';
 

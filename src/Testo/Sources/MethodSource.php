@@ -1,7 +1,7 @@
 <?php
 namespace Testo\Sources;
 
-class MethodSource extends AbstractSource
+class MethodSource implements SourceInterface
 {
     protected $methodTagRegExp = '/^\s*@testo\s+([^\s]+)\s+([^\s]+)\s*$/m';
 
