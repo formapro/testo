@@ -1,7 +1,7 @@
 Some text
 Some text
   @testo       Testo\Tests\files\Example      helloWorld
-<!-- begin -->
+<!-- begin 4f4ad36b0bb460aea820ba0ecae409a9 -->
 $helloWorld = new \HelloWorld;
 
 $helloWorld->say();

@@ -19,8 +19,12 @@ class TestoTest extends \PHPUnit_Framework_TestCase
             array(__DIR__ . '/files/with_multiline_uncomment.tpl', __DIR__ . '/files/with_multiline_uncomment.txt'),
             array(__DIR__ . '/files/with_class.tpl', __DIR__ . '/files/with_class.txt'),
             array(
-                __DIR__ . '/files/with_generated_earlier_code.tpl',
-                __DIR__ . '/files/with_generated_earlier_code.txt'
+                __DIR__ . '/files/with_generated_valid_hash.tpl',
+                __DIR__ . '/files/with_generated_valid_hash.txt'
+            ),
+            array(
+                __DIR__ . '/files/with_generated_invalid_hash.tpl',
+                __DIR__ . '/files/with_generated_invalid_hash.txt'
             ),
         );
     }

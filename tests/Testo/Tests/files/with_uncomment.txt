@@ -1,7 +1,7 @@
 Some text
 Some text
 @testo Testo\Tests\files\Example exampleUncomment
-<!-- begin -->
+<!-- begin a1ba26582268128784778088afabbac9 -->
 use \Foo\Bar;
 $bar = new Bar;
 

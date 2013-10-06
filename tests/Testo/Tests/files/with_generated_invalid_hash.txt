@@ -3,7 +3,7 @@ Some text
 @testo config.yml
 <!-- begin bbb6ac793c80cb104ad23c88452851f9 -->
 foo:
-    - fooKey: fooValue
+    - fooKey: updateValue
     - barKey: barValue
 
 baz: baz

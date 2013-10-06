@@ -1,7 +1,7 @@
 Some text
 Some text
 @testo Testo\Tests\files\Example exampleMultilineUncomment
-<!-- begin -->
+<!-- begin 15cbb568241a2a5d75d167ead9f694a0 -->
 use \Foo\Bar;
 use \Foo\Baz;
 $bar = new Bar;

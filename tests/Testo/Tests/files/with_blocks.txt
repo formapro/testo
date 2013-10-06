@@ -1,7 +1,7 @@
 Some text
 Some text
 @testo Testo\Tests\files\Example exampleBlocks
-<!-- begin -->
+<!-- begin a567778ff2da76e0561ae6d3db6952f2 -->
 $helloWorld->say();
 <!-- end -->
 Some text
