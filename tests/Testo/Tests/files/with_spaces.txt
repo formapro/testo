@@ -1,7 +1,10 @@
 Some text
 Some text
+  @testo       Testo\Tests\files\Example      helloWorld
+<!-- begin -->
 $helloWorld = new \HelloWorld;
 
 $helloWorld->say();
+<!-- end -->
 Some text
 Some text

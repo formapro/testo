@@ -28,7 +28,7 @@ class Example
 
     }
 
-    public function exampleMultiLinedUncomment()
+    public function exampleMultiLineUncomment()
     {
 
         //@testo uncomment {

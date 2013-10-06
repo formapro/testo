@@ -1,5 +1,8 @@
 Some description of the awesome code:
 
 <?php
+@testo Testo\Examples\Hello world
+<!-- begin -->
 echo 'hello world!';
+<!-- end -->
 ?>

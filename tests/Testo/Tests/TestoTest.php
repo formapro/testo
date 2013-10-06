@@ -18,6 +18,10 @@ class TestoTest extends \PHPUnit_Framework_TestCase
             array(__DIR__ . '/files/with_uncomment.tpl', __DIR__ . '/files/with_uncomment.txt'),
             array(__DIR__ . '/files/with_multiline_uncomment.tpl', __DIR__ . '/files/with_multiline_uncomment.txt'),
             array(__DIR__ . '/files/with_class.tpl', __DIR__ . '/files/with_class.txt'),
+            array(
+                __DIR__ . '/files/with_generated_earlier_code.tpl',
+                __DIR__ . '/files/with_generated_earlier_code.txt'
+            ),
         );
     }
 
@@ -26,13 +30,15 @@ class TestoTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideTestData
      */
-    public function shouldGenerateExpectedDocumentFromTemplate($templateFile, $expectedFile)
+    public function shouldGenerateExpectedDocumentFromTemplate($documentFile, $expectedFile)
     {
-        $actualFile = tempnam(sys_get_temp_dir(), 'testo');
+        $documentFileCopy = $documentFile . '~';
+        copy($documentFile, $documentFileCopy);
 
         $testo = new Testo();
-        $testo->generate($templateFile, $actualFile);
+        $testo->generate($documentFileCopy);
 
-        $this->assertFileEquals($expectedFile, $actualFile);
+        $this->assertFileEquals($expectedFile, $documentFileCopy);
+        unlink($documentFileCopy);
     }
 }

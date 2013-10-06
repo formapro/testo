@@ -98,9 +98,8 @@ class ReGenerateDocsOnSuccessListener implements \PHPUnit_Framework_TestListener
     {
         if ($this->rootSuite === $suite && $this->isSuccess) {
 
-            foreach ($this->documentsFiles as $templateFile => $documentFile) {
+            foreach ($this->documentsFiles as $documentFile) {
                 $this->testo->generate(
-                    static::$rootDir . '/' . $templateFile,
                     static::$rootDir . '/' . $documentFile
                 );
             }

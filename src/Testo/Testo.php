@@ -12,6 +12,8 @@ use Testo\Source\SourceInterface;
 
 class Testo implements RootDirAwareInterface
 {
+    protected $beginBlockTag = "<!-- begin -->\n";
+    protected $endBlockTag = "<!-- end -->\n";
     /**
      * @var SourceInterface[]
      */
@@ -40,29 +42,29 @@ class Testo implements RootDirAwareInterface
 
     }
 
-    /**
-     * @param string $templateFile
-     * @param string $documentFile
-     */
-    public function generate($templateFile, $documentFile)
+    public function generate($documentFile)
     {
-        $this->rootDir = dirname($templateFile);
+        $this->rootDir = dirname($documentFile);
 
         $document = array();
-        foreach (file($templateFile) as $line) {
-            $lineReplaced = false;
+        $documentLines = file($documentFile);
+        for ($i = 0, $n = count($documentLines); $i < $n; $i++) {
+            $line = $documentLines[$i];
+            $document[] = $line;
             foreach ($this->sources as $source) {
                 $content = $source->getContent($line);
                 if (is_array($content)) {
-                    $lineReplaced = true;
                     foreach ($this->filters as $filter) {
                         $content = $filter->filter($content);
                     }
+                    if ($this->isBeginBlockTag($documentLines[$i + 1])) {
+                        while (!$this->isEndBlockTag($documentLines[++$i])) {
+                        }
+                    }
+                    $document[] = '<!-- begin -->' . "\n";
                     $document[] = $this->unShiftCode(implode($content));
+                    $document[] = '<!-- end -->' . "\n";
                 }
-            }
-            if (!$lineReplaced) {
-                $document[] = $line;
             }
         }
 
@@ -92,4 +94,24 @@ class Testo implements RootDirAwareInterface
     {
         return $this->rootDir;
     }
+
+    /**
+     * @param string $line
+     * @return bool
+     */
+    protected function isBeginBlockTag($line)
+    {
+        return $this->beginBlockTag == $line;
+    }
+
+    /**
+     * @param string $line
+     * @return bool
+     */
+    protected function isEndBlockTag($line)
+    {
+        return $this->endBlockTag == $line;
+    }
+
+
 }

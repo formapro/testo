@@ -1,5 +1,14 @@
 Some text
 Some text
+@testo config.yml
+<!-- begin -->
+foo:
+    - fooKey: fooValue
+    - barKey: barValue
+
+baz: baz
+<!-- end -->
+Some text
 @testo Testo\Tests\files\Example2
 <!-- begin -->
 class Example2

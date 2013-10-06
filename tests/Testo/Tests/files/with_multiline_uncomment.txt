@@ -1,9 +1,12 @@
 Some text
 Some text
+@testo Testo\Tests\files\Example exampleMultilineUncomment
+<!-- begin -->
 use \Foo\Bar;
 use \Foo\Baz;
 $bar = new Bar;
 
 $bar->baz();
+<!-- end -->
 Some text
 Some text

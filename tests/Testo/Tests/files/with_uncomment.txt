@@ -1,8 +1,11 @@
 Some text
 Some text
+@testo Testo\Tests\files\Example exampleUncomment
+<!-- begin -->
 use \Foo\Bar;
 $bar = new Bar;
 
 $bar->baz();
+<!-- end -->
 Some text
 Some text
