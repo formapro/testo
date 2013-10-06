@@ -61,6 +61,7 @@ class Testo implements RootDirAwareInterface
                         while (!$this->isEndBlockTag($documentLines[++$i])) {
                         }
                     }
+                    
                     $document[] = $this->beginBlockTag;
                     $document[] = $this->unShiftCode(implode($content));
                     $document[] = $this->endBlockTag;
