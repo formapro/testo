@@ -1,7 +1,7 @@
 <?php
-namespace Testo\Tests\Sources;
+namespace Testo\Tests\Source;
 
-use Testo\Sources\MethodSource;
+use Testo\Source\MethodSource;
 
 class MethodSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,6 +19,21 @@ class MethodSourceTest extends \PHPUnit_Framework_TestCase
 
         $source = new MethodSource();
         $result = $source->getContent($line);
+
         $this->assertEquals($expectedContent, $result);
+    }
+
+    /**
+     * @test
+     *
+     * @expectedException \Testo\Exception\MethodNotFoundException
+     */
+    public function shouldThrowExceptionIfMethodNotFound()
+    {
+        $line = '@testo ClassName methodName';
+
+        $source = new MethodSource();
+        $source->getContent($line);
+
     }
 }

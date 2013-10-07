@@ -1,11 +1,21 @@
 <?php
-namespace Testo\Filters;
+namespace Testo\Filter;
 
 class LeaveBlocksFilter implements FilterInterface
 {
+    /**
+     * @var string
+     */
     protected $beginBlockTagRegExp = '|//\s*@testo\s*{\s*$|m';
+
+    /**
+     * @var string
+     */
     protected $endBlockTagRegExp = '|//\s*@testo\s*}\s*$|m';
 
+    /**
+     * {@inheritDoc}
+     */
     public function filter(array $codeLines)
     {
         $blockStarted = false;

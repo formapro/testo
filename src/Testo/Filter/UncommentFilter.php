@@ -1,12 +1,26 @@
 <?php
-namespace Testo\Filters;
+namespace Testo\Filter;
 
 class UncommentFilter implements FilterInterface
 {
+    /**
+     * @var string
+     */
     protected $uncommentTagRegExp = '|//\s*@testo\s+uncomment\s*|';
+
+    /**
+     * @var string
+     */
     protected $beginUncommentTagRegExp = '|(//\s*@testo\s+uncomment\s*{\s*)|';
+
+    /**
+     * @var string
+     */
     protected $endUncommentTagRegExp = '|(//\s*@testo\s+uncomment\s*}\s*)|';
 
+    /**
+     * {@inheritDoc}
+     */
     public function filter(array $codeLines)
     {
         $commentStarted = false;

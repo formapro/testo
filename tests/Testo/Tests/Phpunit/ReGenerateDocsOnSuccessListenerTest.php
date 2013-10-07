@@ -8,8 +8,10 @@ use Testo\Testo;
 class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
 {
 
+    /**
+     * @var string
+     */
     private static $oldRootDir;
-
 
     public static function setUpBeforeClass()
     {

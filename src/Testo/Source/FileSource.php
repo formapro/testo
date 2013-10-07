@@ -1,21 +1,32 @@
 <?php
-namespace Testo\Sources;
+namespace Testo\Source;
+
+use Testo\Exception\FileNotFoundException;
 
 class FileSource implements SourceInterface
 {
-    protected $fileTagRegExp = '/^\s*@testo\s+([^\s]+)\s*$/m';
+    /**
+     * @var string
+     */
+    protected $fileTagRegExp = '/^\s*@testo\s+([^\.]+\.[^\s]+)\s*$/m';
 
     /**
      * @var RootDirAwareInterface
      */
     protected $rootDirAware;
+
+    /**
+     * @param RootDirAwareInterface $rootDirAware
+     */
     public function __construct(RootDirAwareInterface $rootDirAware)
     {
-        $this->rootDirAware=$rootDirAware;
+        $this->rootDirAware = $rootDirAware;
     }
+
     /**
-     * @param string $line
-     * @return array
+     * {@inheritDoc}
+     *
+     * @throws FileNotFoundException
      */
     public function getContent($line)
     {
@@ -23,9 +34,11 @@ class FileSource implements SourceInterface
         if (preg_match($this->fileTagRegExp, $line, $placeholders)) {
             $absolutePathToFile = $this->rootDirAware->getRootDir() . '/' . $placeholders[1];
             if (is_file($absolutePathToFile)) {
-
                 $fileLines = file($absolutePathToFile);
+
                 return $fileLines;
+            } else {
+                throw new FileNotFoundException($line);
             }
         }
 

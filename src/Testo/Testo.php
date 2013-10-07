@@ -1,14 +1,14 @@
 <?php
 namespace Testo;
 
-use Testo\Filters\FilterInterface;
-use Testo\Filters\LeaveBlocksFilter;
-use Testo\Filters\UncommentFilter;
-use Testo\Sources\ClassSource;
-use Testo\Sources\FileSource;
-use Testo\Sources\MethodSource;
-use Testo\Sources\RootDirAwareInterface;
-use Testo\Sources\SourceInterface;
+use Testo\Filter\FilterInterface;
+use Testo\Filter\LeaveBlocksFilter;
+use Testo\Filter\UncommentFilter;
+use Testo\Source\ClassSource;
+use Testo\Source\FileSource;
+use Testo\Source\MethodSource;
+use Testo\Source\RootDirAwareInterface;
+use Testo\Source\SourceInterface;
 
 class Testo implements RootDirAwareInterface
 {
@@ -16,6 +16,7 @@ class Testo implements RootDirAwareInterface
      * @var SourceInterface[]
      */
     protected $sources;
+
     /**
      * @var FilterInterface[]
      */
@@ -28,15 +29,21 @@ class Testo implements RootDirAwareInterface
 
     public function __construct()
     {
+        $this->filters = array();
         $this->filters[] = new UncommentFilter();
         $this->filters[] = new LeaveBlocksFilter();
 
+        $this->sources = array();
         $this->sources[] = new FileSource($this);
         $this->sources[] = new ClassSource();
         $this->sources[] = new MethodSource();
 
     }
 
+    /**
+     * @param string $templateFile
+     * @param string $documentFile
+     */
     public function generate($templateFile, $documentFile)
     {
         $this->rootDir = dirname($templateFile);
@@ -62,6 +69,10 @@ class Testo implements RootDirAwareInterface
         file_put_contents($documentFile, implode('', $document));
     }
 
+    /**
+     * @param string $code
+     * @return string
+     */
     protected function unShiftCode($code)
     {
         $code = trim($code, "\n") . "\n";

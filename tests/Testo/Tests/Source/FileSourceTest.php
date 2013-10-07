@@ -1,8 +1,8 @@
 <?php
-namespace Testo\Tests\Sources;
+namespace Testo\Tests\Source;
 
-use Testo\Sources\FileSource;
-use Testo\Sources\RootDirAwareInterface;
+use Testo\Source\FileSource;
+use Testo\Source\RootDirAwareInterface;
 
 class FileSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,7 +23,23 @@ class FileSourceTest extends \PHPUnit_Framework_TestCase
         );
         $source = new FileSource($rootDirAwareStub);
         $result = $source->getContent($line);
+
         $this->assertEquals($expectedContent, $result);
+    }
+
+    /**
+     * @test
+     *
+     * @expectedException \Testo\Exception\FileNotFoundException
+     */
+    public function shouldThrowExceptionIfFileNotFound()
+    {
+        $line = '@testo nonexistent_file.yml';
+        $rootDirAwareStub = $this->createRootDirAwareStub();
+
+        $source = new FileSource($rootDirAwareStub);
+        $source->getContent($line);
+
     }
 
     /**
@@ -31,7 +47,7 @@ class FileSourceTest extends \PHPUnit_Framework_TestCase
      */
     protected function createRootDirAwareStub()
     {
-        $stub = $this->getMock('Testo\Sources\RootDirAwareInterface', array('getRootDir'));
+        $stub = $this->getMock('Testo\Source\RootDirAwareInterface', array('getRootDir'));
         $stub->expects($this->any())
             ->method('getRootDir')
             ->will($this->returnValue(realpath(__DIR__ . '/../files')));

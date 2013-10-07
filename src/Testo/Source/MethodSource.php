@@ -1,13 +1,19 @@
 <?php
-namespace Testo\Sources;
+namespace Testo\Source;
+
+use Testo\Exception\MethodNotFoundException;
 
 class MethodSource implements SourceInterface
 {
+    /**
+     * @var string
+     */
     protected $methodTagRegExp = '/^\s*@testo\s+([^\s]+)\s+([^\s]+)\s*$/m';
 
     /**
-     * @param string $line
-     * @return array
+     * {@inheritDoc}
+     *
+     * @throws MethodNotFoundException
      */
     public function getContent($line)
     {
@@ -17,8 +23,14 @@ class MethodSource implements SourceInterface
             $className = $placeholders[1];
             $methodName = $placeholders[2];
 
-            $rm = new \ReflectionMethod($className, $methodName);
-            return $this->getMethodCode($rm);
+            try {
+                $rm = new \ReflectionMethod($className, $methodName);
+
+                return $this->getMethodCode($rm);
+            } catch (\ReflectionException $e) {
+                throw new MethodNotFoundException($line);
+            }
+
         }
 
         return false;
@@ -26,6 +38,7 @@ class MethodSource implements SourceInterface
 
     /**
      * @param \ReflectionMethod $reflectionMethod
+     *
      * @return array
      */
     protected function getMethodCode(\ReflectionMethod $reflectionMethod)

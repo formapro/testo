@@ -1,5 +1,5 @@
 <?php
-namespace Testo\Sources;
+namespace Testo\Source;
 
 interface RootDirAwareInterface
 {

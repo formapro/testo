@@ -1,16 +1,19 @@
 <?php
-namespace Testo\Tests\Filters;
+namespace Testo\Tests\Filter;
 
-use Testo\Filters\UncommentFilter;
+use Testo\Filter\UncommentFilter;
 
 class UncommentFilterTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function dataProvider()
+    /**
+     * @return array
+     */
+    public function provideCodeLines()
     {
         return array(
-            array(
-                $inputLines = array(
+            'uncomment inline comment' => array(
+                array(
                     'some code',
                     '//@testo uncomment use Something;',
                     'some code 1',
@@ -18,7 +21,7 @@ class UncommentFilterTest extends \PHPUnit_Framework_TestCase
                     'some code 3',
                     'some code 4',
                 ),
-                $expectedFilteredLines = array(
+                array(
                     'some code',
                     'use Something;',
                     'some code 1',
@@ -27,8 +30,8 @@ class UncommentFilterTest extends \PHPUnit_Framework_TestCase
                     'some code 4',
                 )
             ),
-            array(
-                $inputLines = array(
+            'uncomment multiline comment' => array(
+                array(
                     'some code',
                     '//@testo uncomment {',
                     '//use Something1;',
@@ -38,7 +41,7 @@ class UncommentFilterTest extends \PHPUnit_Framework_TestCase
                     'some code 3',
                     'some code 4',
                 ),
-                $expectedFilteredLines = array(
+                array(
                     'some code',
                     'use Something1;',
                     'use Something2;',
@@ -47,37 +50,19 @@ class UncommentFilterTest extends \PHPUnit_Framework_TestCase
                     'some code 4',
                 )
             ),
-
-
         );
     }
 
     /**
-     * @dataProvider dataProvider
+     * @dataProvider provideCodeLines
      *
      * @test
      */
     public function shouldUncommentLines($input, $expected)
     {
-        $inputLines = array(
-            'some code',
-            '//@testo uncomment use Something;',
-            'some code 1',
-            'some code 2',
-            'some code 3',
-            'some code 4',
-        );
-        $expectedFilteredLines = array(
-            'some code',
-            'use Something;',
-            'some code 1',
-            'some code 2',
-            'some code 3',
-            'some code 4',
-        );
-
         $filter = new UncommentFilter();
         $result = $filter->filter($input);
+
         $this->assertEquals($expected, $result);
     }
 }

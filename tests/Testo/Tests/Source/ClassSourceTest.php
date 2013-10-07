@@ -1,7 +1,7 @@
 <?php
-namespace Testo\Tests\Sources;
+namespace Testo\Tests\Source;
 
-use Testo\Sources\ClassSource;
+use Testo\Source\ClassSource;
 
 class ClassSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,6 +26,21 @@ class ClassSourceTest extends \PHPUnit_Framework_TestCase
 
         $source = new ClassSource();
         $result = $source->getContent($line);
+
         $this->assertEquals($expectedContent, $result);
+    }
+
+    /**
+     * @test
+     *
+     * @expectedException \Testo\Exception\ClassNotFoundException
+     */
+    public function shouldThrowExceptionIfClassNotFound()
+    {
+        $line = '@testo NonexistentClassName';
+
+        $source = new ClassSource();
+        $source->getContent($line);
+
     }
 }
