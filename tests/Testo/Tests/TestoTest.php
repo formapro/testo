@@ -44,9 +44,9 @@ class TestoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException \Testo\Exception\ExternalBlockChangeException
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Block changed externally
      */
-
     public function shouldThrowExternalBlockChangeExceptionIfHashIsInvalid()
     {
         $file = __DIR__ . '/files/with_generated_invalid_hash.tpl';

@@ -1,7 +1,6 @@
 <?php
 namespace Testo;
 
-use Testo\Exception\ExternalBlockChangeException;
 use Testo\Filter\FilterInterface;
 use Testo\Filter\LeaveBlocksFilter;
 use Testo\Filter\UncommentFilter;
@@ -53,7 +52,7 @@ class Testo implements RootDirAwareInterface
 
     /**
      * @param $documentFile
-     * @throws ExternalBlockChangeException
+     * @throws \LogicException
      */
     public function generate($documentFile)
     {
@@ -79,7 +78,7 @@ class Testo implements RootDirAwareInterface
                     $endBlockLine = $documentLines[$i];
                     $parsedHash = $this->parseHashFromEndBlockLine($endBlockLine);
                     if (!$this->isBlockValid($block, $parsedHash)) {
-                        throw new ExternalBlockChangeException(sprintf(
+                        throw new \LogicException(sprintf(
                             "Block changed externally\n\nFile is '%s'\nLine is '%s'\nCode is '%s'",
                             $documentFile,
                             $line,
