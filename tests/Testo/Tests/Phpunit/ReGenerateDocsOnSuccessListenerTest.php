@@ -18,11 +18,17 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
         self::$oldRootDir = self::readAttribute('Testo\Phpunit\ReGenerateDocsOnSuccessListener', 'rootDir');
     }
 
+    /**
+     *
+     */
     public static function tearDownAfterClass()
     {
         ReGenerateDocsOnSuccessListener::setRootDir(self::$oldRootDir);
     }
 
+    /**
+     *
+     */
     protected function setUp()
     {
         ReGenerateDocsOnSuccessListener::setRootDir(null);

@@ -1,5 +1,6 @@
 Some text
 Some text
-@testo config.yml
+@testo config.yml {
+@testo }
 Some text
 Some text

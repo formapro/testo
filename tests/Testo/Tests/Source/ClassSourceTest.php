@@ -33,12 +33,8 @@ class ClassSourceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      *
-<<<<<<< HEAD:tests/Testo/Tests/Source/ClassSourceTest.php
      * @expectedException \Testo\Exception\SourceNotFoundException
      * @expectedExceptionMessage Class not found
-=======
-     * @expectedException \Testo\Exception\ClassNotFoundException
->>>>>>> fixes:tests/Testo/Tests/Source/ClassSourceTest.php
      */
     public function shouldThrowExceptionIfClassNotFound()
     {

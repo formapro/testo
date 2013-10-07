@@ -22,10 +22,6 @@ class TestoTest extends \PHPUnit_Framework_TestCase
                 __DIR__ . '/files/with_generated_valid_hash.tpl',
                 __DIR__ . '/files/with_generated_valid_hash.txt'
             ),
-            array(
-                __DIR__ . '/files/with_generated_invalid_hash.tpl',
-                __DIR__ . '/files/with_generated_invalid_hash.txt'
-            ),
         );
     }
 
@@ -44,5 +40,18 @@ class TestoTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFileEquals($expectedFile, $documentFileCopy);
         unlink($documentFileCopy);
+    }
+
+    /**
+     * @test
+     * @expectedException \Testo\Exception\ExternalBlockChangeException
+     */
+
+    public function shouldThrowExternalBlockChangeExceptionIfHashIsInvalid()
+    {
+        $file = __DIR__ . '/files/with_generated_invalid_hash.tpl';
+
+        $testo = new Testo();
+        $testo->generate($file);
     }
 }

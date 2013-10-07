@@ -68,9 +68,9 @@ class LeaveBlocksFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideCodeLines
-     *
      * @test
+     *
+     * @dataProvider provideCodeLines
      */
     public function shouldLeaveBlocksOnly($input, $expected)
     {

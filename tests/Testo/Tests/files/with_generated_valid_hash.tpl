@@ -1,16 +1,14 @@
 Some text
 Some text
-@testo config.yml
-<!-- begin bbb6ac793c80cb104ad23c88452851f9 -->
+@testo config.yml {
 foo:
 - fooKey: fooValue
 - barKey: barValue
 
 baz: baz
-<!-- end -->
+@testo bbb6ac793c80cb104ad23c88452851f9 }
 Some text
-@testo Testo\Tests\files\Example2
-<!-- begin 5a2f9848eddf26dfa3424e09ee3707ab -->
+@testo Testo\Tests\files\Example2 {
 class Example2
 {
 public function helloWorld()
@@ -21,6 +19,6 @@ $helloWorld->say();
 }
 
 }
-<!-- end -->
+@testo 5a2f9848eddf26dfa3424e09ee3707ab }
 Some text
 Some text

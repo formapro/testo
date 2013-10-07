@@ -30,12 +30,8 @@ class FileSourceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      *
-<<<<<<< HEAD:tests/Testo/Tests/Source/FileSourceTest.php
      * @expectedException \Testo\Exception\SourceNotFoundException
      * @expectedExceptionMessage File not found
-=======
-     * @expectedException \Testo\Exception\FileNotFoundException
->>>>>>> fixes:tests/Testo/Tests/Source/FileSourceTest.php
      */
     public function shouldThrowExceptionIfFileNotFound()
     {
@@ -56,6 +52,7 @@ class FileSourceTest extends \PHPUnit_Framework_TestCase
         $stub->expects($this->any())
             ->method('getRootDir')
             ->will($this->returnValue(realpath(__DIR__ . '/../files')));
+
         return $stub;
     }
 

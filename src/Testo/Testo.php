@@ -1,6 +1,7 @@
 <?php
 namespace Testo;
 
+use Testo\Exception\ExternalBlockChangeException;
 use Testo\Filter\FilterInterface;
 use Testo\Filter\LeaveBlocksFilter;
 use Testo\Filter\UncommentFilter;
@@ -12,9 +13,16 @@ use Testo\Source\SourceInterface;
 
 class Testo implements RootDirAwareInterface
 {
-    protected $beginBlockTagMask = "<!-- begin {hash} -->\n";
-    protected $beginBlockTagRegExp = '/<!-- begin ([^\s]+) -->/';
-    protected $endBlockTag = "<!-- end -->\n";
+    /**
+     * @var string
+     */
+    protected $endBlockTagMask = "@testo {hash} }\n";
+
+    /**
+     * @var string
+     */
+    protected $endBlockTagRegExp = '/@testo\s+([^\s]*)\s*}/';
+
     /**
      * @var SourceInterface[]
      */
@@ -43,6 +51,10 @@ class Testo implements RootDirAwareInterface
 
     }
 
+    /**
+     * @param $documentFile
+     * @throws ExternalBlockChangeException
+     */
     public function generate($documentFile)
     {
         $this->rootDir = dirname($documentFile);
@@ -53,31 +65,30 @@ class Testo implements RootDirAwareInterface
             $line = $documentLines[$i];
             $document[] = $line;
             foreach ($this->sources as $source) {
-                $content = $source->getContent($line);
+                $content = $source->getContent(rtrim($line, "\n{ "));
                 if (is_array($content)) {
                     foreach ($this->filters as $filter) {
                         $content = $filter->filter($content);
                     }
-                    if ($this->isBeginBlockTag($documentLines[$i + 1])) {
-                        $beginBlockLine = $documentLines[++$i];
-                        $parsedHash = $this->parseHashFromBeginBlockLine($beginBlockLine);
-                        $i += 1; // line next to block beginning
-                        $block = '';
-                        while (!$this->isEndBlockTag($documentLines[$i])) {
-                            $block .= $documentLines[$i++];
-                        }
-                        $endBlockLine = $documentLines[$i];
-                        if (!$this->isBlockValid($block, $parsedHash)) {
-                            $document[] = $beginBlockLine;
-                            $document[] = $block;
-                            $document[] = $endBlockLine;
-                            break;
-                        }
+                    $block = '';
+                    $i++;
+                    while (!$this->isEndBlockTag($documentLines[$i])) {
+                        $block .= $documentLines[$i];
+                        $i++;
+                    }
+                    $endBlockLine = $documentLines[$i];
+                    $parsedHash = $this->parseHashFromEndBlockLine($endBlockLine);
+                    if (!$this->isBlockValid($block, $parsedHash)) {
+                        throw new ExternalBlockChangeException(sprintf(
+                            "Block changed externally\n\nFile is '%s'\nLine is '%s'\nCode is '%s'",
+                            $documentFile,
+                            $line,
+                            $block
+                        ));
                     }
                     $code = $this->unShiftCode(implode($content));
-                    $document[] = $this->getBeginBlockTagMask($this->hash($code));
                     $document[] = $code;
-                    $document[] = $this->endBlockTag;
+                    $document[] = $this->getEndTag($this->hash($code));
                 }
             }
         }
@@ -87,6 +98,7 @@ class Testo implements RootDirAwareInterface
 
     /**
      * @param string $code
+     *
      * @return string
      */
     protected function unShiftCode($code)
@@ -111,24 +123,17 @@ class Testo implements RootDirAwareInterface
 
     /**
      * @param string $line
-     * @return bool
-     */
-    protected function isBeginBlockTag($line)
-    {
-        return preg_match($this->beginBlockTagRegExp, $line, $placeholders);
-    }
-
-    /**
-     * @param string $line
+     *
      * @return bool
      */
     protected function isEndBlockTag($line)
     {
-        return $this->endBlockTag == $line;
+        return preg_match($this->endBlockTagRegExp, $line, $placeholders);
     }
 
     /**
      * @param string $code
+     *
      * @return string
      */
     protected function hash($code)
@@ -136,22 +141,45 @@ class Testo implements RootDirAwareInterface
         return md5($code);
     }
 
-    protected function getBeginBlockTagMask($hash)
+    /**
+     * @param string $hash
+     *
+     * @return string
+     */
+    protected function getEndTag($hash)
     {
-        return str_replace('{hash}', $hash, $this->beginBlockTagMask);
+        return str_replace('{hash}', $hash, $this->endBlockTagMask);
     }
 
-    protected function parseHashFromBeginBlockLine($line)
+    /**
+     * @param string $line
+     *
+     * @return string
+     */
+    protected function parseHashFromEndBlockLine($line)
     {
         $placeholders = array();
-        if (preg_match($this->beginBlockTagRegExp, $line, $placeholders)) {
+        if (preg_match($this->endBlockTagRegExp, $line, $placeholders)) {
+
             return $placeholders[1];
         }
+
         return '';
     }
 
+    /**
+     * @param string $block
+     * @param string $validHash
+     *
+     * @return bool
+     */
     protected function isBlockValid($block, $validHash)
     {
+        if ($block == '' && $validHash == '') {
+
+            return true;
+        }
+
         return $this->hash($block) == $validHash;
     }
 }

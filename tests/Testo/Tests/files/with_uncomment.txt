@@ -1,11 +1,10 @@
 Some text
 Some text
-@testo Testo\Tests\files\Example exampleUncomment
-<!-- begin a1ba26582268128784778088afabbac9 -->
+@testo Testo\Tests\files\Example exampleUncomment {
 use \Foo\Bar;
 $bar = new Bar;
 
 $bar->baz();
-<!-- end -->
+@testo a1ba26582268128784778088afabbac9 }
 Some text
 Some text

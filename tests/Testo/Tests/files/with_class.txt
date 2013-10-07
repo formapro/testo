@@ -1,7 +1,6 @@
 Some text
 Some text
-@testo Testo\Tests\files\Example2
-<!-- begin 5a2f9848eddf26dfa3424e09ee3707ab -->
+@testo Testo\Tests\files\Example2 {
 class Example2
 {
     public function helloWorld()
@@ -12,6 +11,6 @@ class Example2
     }
 
 }
-<!-- end -->
+@testo 5a2f9848eddf26dfa3424e09ee3707ab }
 Some text
 Some text

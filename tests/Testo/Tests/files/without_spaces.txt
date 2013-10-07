@@ -1,10 +1,9 @@
 Some text
 Some text
-@testo Testo\Tests\files\Example helloWorld
-<!-- begin 4f4ad36b0bb460aea820ba0ecae409a9 -->
+@testo Testo\Tests\files\Example helloWorld {
 $helloWorld = new \HelloWorld;
 
 $helloWorld->say();
-<!-- end -->
+@testo 4f4ad36b0bb460aea820ba0ecae409a9 }
 Some text
 Some text

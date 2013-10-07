@@ -1,12 +1,11 @@
 Some text
 Some text
-@testo Testo\Tests\files\Example exampleMultilineUncomment
-<!-- begin 15cbb568241a2a5d75d167ead9f694a0 -->
+@testo Testo\Tests\files\Example exampleMultilineUncomment {
 use \Foo\Bar;
 use \Foo\Baz;
 $bar = new Bar;
 
 $bar->baz();
-<!-- end -->
+@testo 15cbb568241a2a5d75d167ead9f694a0 }
 Some text
 Some text

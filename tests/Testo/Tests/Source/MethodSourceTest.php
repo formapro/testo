@@ -26,12 +26,8 @@ class MethodSourceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      *
-<<<<<<< HEAD:tests/Testo/Tests/Source/MethodSourceTest.php
      * @expectedException \Testo\Exception\SourceNotFoundException
      * @expectedExceptionMessage Method not found
-=======
-     * @expectedException \Testo\Exception\MethodNotFoundException
->>>>>>> fixes:tests/Testo/Tests/Source/MethodSourceTest.php
      */
     public function shouldThrowExceptionIfMethodNotFound()
     {
