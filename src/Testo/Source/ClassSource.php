@@ -1,7 +1,6 @@
 <?php
 namespace Testo\Source;
 
-
 use Testo\Exception\SourceNotFoundException;
 
 class ClassSource implements SourceInterface

@@ -30,8 +30,12 @@ class FileSourceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      *
+<<<<<<< HEAD:tests/Testo/Tests/Source/FileSourceTest.php
      * @expectedException \Testo\Exception\SourceNotFoundException
      * @expectedExceptionMessage File not found
+=======
+     * @expectedException \Testo\Exception\FileNotFoundException
+>>>>>>> fixes:tests/Testo/Tests/Source/FileSourceTest.php
      */
     public function shouldThrowExceptionIfFileNotFound()
     {
