@@ -1,7 +1,7 @@
 <?php
 namespace Testo\Source;
 
-use Testo\Exception\FileNotFoundException;
+use Testo\Exception\SourceNotFoundException;
 
 class FileSource implements SourceInterface
 {
@@ -25,8 +25,6 @@ class FileSource implements SourceInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @throws FileNotFoundException
      */
     public function getContent($line)
     {
@@ -38,7 +36,7 @@ class FileSource implements SourceInterface
 
                 return $fileLines;
             } else {
-                throw new FileNotFoundException($line);
+                throw new SourceNotFoundException(sprintf("File not found.\n\nLine is '%s'", $line));
             }
         }
 

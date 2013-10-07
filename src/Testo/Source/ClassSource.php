@@ -1,7 +1,8 @@
 <?php
 namespace Testo\Source;
 
-use Testo\Exception\ClassNotFoundException;
+
+use Testo\Exception\SourceNotFoundException;
 
 class ClassSource implements SourceInterface
 {
@@ -12,8 +13,6 @@ class ClassSource implements SourceInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @throws ClassNotFoundException
      */
     public function getContent($line)
     {
@@ -25,7 +24,7 @@ class ClassSource implements SourceInterface
 
                 return $this->getClassCode($rc);
             } catch (\ReflectionException $e) {
-                throw new ClassNotFoundException($line);
+                throw new SourceNotFoundException(sprintf("Class not found.\n\nLine is '%s'", $line));
             }
 
         }

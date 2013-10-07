@@ -33,7 +33,8 @@ class ClassSourceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      *
-     * @expectedException \Testo\Exception\ClassNotFoundException
+     * @expectedException \Testo\Exception\SourceNotFoundException
+     * @expectedExceptionMessage Class not found
      */
     public function shouldThrowExceptionIfClassNotFound()
     {

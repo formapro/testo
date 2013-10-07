@@ -26,7 +26,8 @@ class MethodSourceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      *
-     * @expectedException \Testo\Exception\MethodNotFoundException
+     * @expectedException \Testo\Exception\SourceNotFoundException
+     * @expectedExceptionMessage Method not found
      */
     public function shouldThrowExceptionIfMethodNotFound()
     {

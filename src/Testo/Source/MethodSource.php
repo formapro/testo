@@ -1,7 +1,7 @@
 <?php
 namespace Testo\Source;
 
-use Testo\Exception\MethodNotFoundException;
+use Testo\Exception\SourceNotFoundException;
 
 class MethodSource implements SourceInterface
 {
@@ -12,8 +12,6 @@ class MethodSource implements SourceInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @throws MethodNotFoundException
      */
     public function getContent($line)
     {
@@ -28,7 +26,7 @@ class MethodSource implements SourceInterface
 
                 return $this->getMethodCode($rm);
             } catch (\ReflectionException $e) {
-                throw new MethodNotFoundException($line);
+                throw new SourceNotFoundException(sprintf("Method not found.\n\nLine is '%s'", $line));
             }
 
         }
