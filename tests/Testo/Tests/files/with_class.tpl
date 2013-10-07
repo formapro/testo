@@ -1,5 +1,5 @@
 Some text
 Some text
-@testo config.yml
+@testo Testo\Tests\files\Example2
 Some text
 Some text

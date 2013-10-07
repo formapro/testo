@@ -13,25 +13,28 @@ class Example
     public function exampleBlocks()
     {
         $helloWorld = new \HelloWorld;
-        //@testo:start
+        //@testo {
         $helloWorld->say();
-        //@testo:end
-    }
-
-    public function exampleSource()
-    {
-
-        //@testo:source
-        $helloWorld = new \HelloWorld;
-
-        $helloWorld->say();
-
+        //@testo }
     }
 
     public function exampleUncomment()
     {
 
-        //@testo:uncomment:use \Foo\Bar;
+        //@testo uncomment use \Foo\Bar;
+        $bar = new Bar;
+
+        $bar->baz();
+
+    }
+
+    public function exampleMultiLinedUncomment()
+    {
+
+        //@testo uncomment {
+        //use \Foo\Bar;
+        //use \Foo\Baz;
+        //@testo uncomment }
         $bar = new Bar;
 
         $bar->baz();

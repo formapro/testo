@@ -1,0 +1,14 @@
+Some text
+Some text
+class Example2
+{
+    public function helloWorld()
+    {
+        $helloWorld = new \HelloWorld;
+
+        $helloWorld->say();
+    }
+
+}
+Some text
+Some text

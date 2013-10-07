@@ -1,132 +1,95 @@
 <?php
 namespace Testo;
 
-class Testo
-{   
-    public function generate($templateFile, $documentFile)
-    {    
-        $document = $this->replaceMethods(file_get_contents($templateFile));
-        $document = $this->replaceFiles($document, dirname($templateFile));
+use Testo\Filter\FilterInterface;
+use Testo\Filter\LeaveBlocksFilter;
+use Testo\Filter\UncommentFilter;
+use Testo\Source\ClassSource;
+use Testo\Source\FileSource;
+use Testo\Source\MethodSource;
+use Testo\Source\RootDirAwareInterface;
+use Testo\Source\SourceInterface;
 
-        file_put_contents($documentFile, $document);
-    }
-    
-    protected function replaceMethods($template)
+class Testo implements RootDirAwareInterface
+{
+    /**
+     * @var SourceInterface[]
+     */
+    protected $sources;
+
+    /**
+     * @var FilterInterface[]
+     */
+    protected $filters;
+
+    /**
+     * @var string
+     */
+    protected $rootDir;
+
+    public function __construct()
     {
-        $document = $template;
-        
-        $placeholders =array();
-        if (preg_match_all('/\{\{\s*?testo:([^\s]+)\:\:([^\s]+)\s*?\}\}/', $template, $placeholders)) {
-            foreach($placeholders[1] as $index => $class) {
-                $method = $placeholders[2][$index];
-                $placeholder = $placeholders[0][$index];
+        $this->filters = array();
+        $this->filters[] = new UncommentFilter();
+        $this->filters[] = new LeaveBlocksFilter();
 
-                $methodCode = $this->doGenerateMethodCode($class, $method);
+        $this->sources = array();
+        $this->sources[] = new FileSource($this);
+        $this->sources[] = new ClassSource();
+        $this->sources[] = new MethodSource();
 
-                $document = str_replace($placeholder, $methodCode, $document);
-            }
-        }
-
-        return $document;
-    }
-    
-    protected function replaceFiles($template, $rootDir)
-    {
-        $document = $template;
-
-        $placeholders =array();
-        if (preg_match_all('/\{\{\s*?testo:(.+\/?.+)\}\}/', $template, $placeholders)) {
-            foreach($placeholders[1] as $index => $relativePath) {
-                $absolutePath = $rootDir.'/'.$relativePath;
-                $placeholder = $placeholders[0][$index];
-
-                $document = str_replace($placeholder, file_get_contents($absolutePath), $document);
-            }
-        }
-
-        return $document;
-    }
-    
-    protected function doGenerateMethodCode($class, $method)
-    {
-        $methodCode = $this->collectMethodCode(new \ReflectionMethod($class, $method));
-        $methodCode = $this->filterMethodCode($methodCode);
-        
-        return $methodCode;
     }
 
     /**
-     * @param \ReflectionMethod $rm
-     * 
+     * @param string $templateFile
+     * @param string $documentFile
+     */
+    public function generate($templateFile, $documentFile)
+    {
+        $this->rootDir = dirname($templateFile);
+
+        $document = array();
+        foreach (file($templateFile) as $line) {
+            $lineReplaced = false;
+            foreach ($this->sources as $source) {
+                $content = $source->getContent($line);
+                if (is_array($content)) {
+                    $lineReplaced = true;
+                    foreach ($this->filters as $filter) {
+                        $content = $filter->filter($content);
+                    }
+                    $document[] = $this->unShiftCode(implode($content));
+                }
+            }
+            if (!$lineReplaced) {
+                $document[] = $line;
+            }
+        }
+
+        file_put_contents($documentFile, implode('', $document));
+    }
+
+    /**
+     * @param string $code
      * @return string
      */
-    protected function collectMethodCode(\ReflectionMethod $rm)
+    protected function unShiftCode($code)
     {
-        $methodCodeLines = $this->extractMethodLines($rm);
-
-        foreach($methodCodeLines as &$methodCodeLine) {
-            if (false !== strpos($methodCodeLine, '//@testo:source')) {
-                $methodCodeLine = str_replace(
-                    '//@testo:source', 
-                    '//Source: '.$rm->getDeclaringClass()->getName().'::'.$rm->getName().'()',
-                    $methodCodeLine
-                );
-            }
-            if (false !== strpos($methodCodeLine, '//@testo:uncomment:')) {
-                $methodCodeLine = str_replace('//@testo:uncomment:', '', $methodCodeLine);
-            }
-        }
-        
-        $hasInstruction = false !== strpos(implode("", $methodCodeLines), '//@testo');
-        
-        $methodCode = '';
-        if ($hasInstruction) {
-            $blockStarted = false;
-            foreach($methodCodeLines as $methodCodeLine) {
-                if (false !== strpos($methodCodeLine, '//@testo:end')) {
-                    $blockStarted = false;
-                }
-
-                if ($blockStarted) {
-                    $methodCode .= $methodCodeLine;
-                }
-
-                if (false !== strpos($methodCodeLine, '//@testo:start')) {
-                    $blockStarted = true; 
-                }
-            }
-        } else {
-            $methodCode = implode("", $methodCodeLines);
-        }
-        
-        return $methodCode;
-    }
-    
-    protected function extractMethodLines(\ReflectionMethod $rm)
-    {
-        $file = file($rm->getFileName());
-        $methodCodeLines = array();
-        foreach(range($rm->getStartLine(), $rm->getEndLine() - 1) as $line) {
-            $methodCodeLines[] = $file[$line];
-        }
-
-        return $methodCodeLines;
-    }
-    
-    protected function filterMethodCode($methodCode)
-    {
-        $methodCode = preg_replace('/^\s*?\{/', '', $methodCode);
-        $methodCode = preg_replace('/\}\s*?$/', '', $methodCode);
-        $methodCode = ltrim($methodCode, "\n");
-        $methodCode = rtrim($methodCode, "\n ");
-        
-        
+        $code = trim($code, "\n") . "\n";
         $placeholders = array();
-        if (preg_match('/^(\s*?)[^\s]/', $methodCode, $placeholders)) {
-            $methodCode = preg_replace("/^$placeholders[1]/", '', $methodCode);
-            $methodCode = str_replace("\n$placeholders[1]", "\n", $methodCode);
+        if (preg_match('/^(\s*?)[^\s]/', $code, $placeholders)) {
+            $code = preg_replace("/^$placeholders[1]/", '', $code);
+            $code = str_replace("\n$placeholders[1]", "\n", $code);
         }
-        
-        return $methodCode;
+
+        return $code;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRootDir()
+    {
+        return $this->rootDir;
     }
 }
