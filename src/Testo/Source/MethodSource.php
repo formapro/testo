@@ -26,7 +26,7 @@ class MethodSource implements SourceInterface
 
                 return $this->getMethodCode($rm);
             } catch (\ReflectionException $e) {
-                throw new SourceNotFoundException(sprintf("Method not found.\n\nLine is '%s'", $line));
+                throw new SourceNotFoundException(sprintf("Method not found.\n\nLine is '%s'", $line), 0, $e);
             }
 
         }

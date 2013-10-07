@@ -24,7 +24,7 @@ class ClassSource implements SourceInterface
 
                 return $this->getClassCode($rc);
             } catch (\ReflectionException $e) {
-                throw new SourceNotFoundException(sprintf("Class not found.\n\nLine is '%s'", $line));
+                throw new SourceNotFoundException(sprintf("Class not found.\n\nLine is '%s'", $line), 0, $e);
             }
 
         }
@@ -43,6 +43,7 @@ class ClassSource implements SourceInterface
         $fileStartLine = $reflectionClass->getStartLine();
         $fileEndLine = $reflectionClass->getEndLine();
         $codeLines = array_slice($fileLines, $fileStartLine - 1, $fileEndLine - $fileStartLine + 1);
+
         return $codeLines;
     }
 
