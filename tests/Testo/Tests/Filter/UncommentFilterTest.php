@@ -54,9 +54,9 @@ class UncommentFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideCodeLines
-     *
      * @test
+     *
+     * @dataProvider provideCodeLines
      */
     public function shouldUncommentLines($input, $expected)
     {

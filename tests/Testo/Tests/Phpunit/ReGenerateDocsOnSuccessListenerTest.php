@@ -18,11 +18,17 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
         self::$oldRootDir = self::readAttribute('Testo\Phpunit\ReGenerateDocsOnSuccessListener', 'rootDir');
     }
 
+    /**
+     *
+     */
     public static function tearDownAfterClass()
     {
         ReGenerateDocsOnSuccessListener::setRootDir(self::$oldRootDir);
     }
 
+    /**
+     *
+     */
     protected function setUp()
     {
         ReGenerateDocsOnSuccessListener::setRootDir(null);
@@ -164,13 +170,13 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCallGenerateMethodOnceForOneDocumentWithCorrectParams()
     {
-        $listener = new ReGenerateDocsOnSuccessListener($documents = array('path1' => 'path2'));
+        $listener = new ReGenerateDocsOnSuccessListener($documents = array('path'));
         $listenerRootDir = $this->readAttribute('Testo\Phpunit\ReGenerateDocsOnSuccessListener', 'rootDir');
 
         $testoMock = $this->createTestoMock();
         $testoMock->expects($this->once())
             ->method('generate')
-            ->with($this->equalTo($listenerRootDir . '/path1'), $this->equalTo($listenerRootDir . '/path2'));
+            ->with($this->equalTo($listenerRootDir . '/path'));
 
         $testSuitMock = $this->createFrameworkTestSuiteMock();
 
@@ -207,9 +213,9 @@ class ReGenerateDocsOnSuccessListenerTest extends \PHPUnit_Framework_TestCase
     public function shouldCallGenerateInRootTestSuite()
     {
         $documents = array(
-            'doc1' => 'doc1',
-            'doc2' => 'doc2',
-            'doc3' => 'doc3'
+            'doc1',
+            'doc2',
+            'doc3'
         );
         $listener = new ReGenerateDocsOnSuccessListener($documents);
         $testSuitMock = $this->createFrameworkTestSuiteMock();

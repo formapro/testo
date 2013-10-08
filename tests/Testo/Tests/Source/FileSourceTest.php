@@ -52,6 +52,7 @@ class FileSourceTest extends \PHPUnit_Framework_TestCase
         $stub->expects($this->any())
             ->method('getRootDir')
             ->will($this->returnValue(realpath(__DIR__ . '/../files')));
+
         return $stub;
     }
 

@@ -1,5 +1,7 @@
 Some text
 Some text
+@testo Testo\Tests\files\Example exampleBlocks {
 $helloWorld->say();
+@testo a567778ff2da76e0561ae6d3db6952f2 }
 Some text
 Some text

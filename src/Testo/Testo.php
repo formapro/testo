@@ -13,6 +13,16 @@ use Testo\Source\SourceInterface;
 class Testo implements RootDirAwareInterface
 {
     /**
+     * @var string
+     */
+    protected $endBlockTagMask = "@testo {hash} }\n";
+
+    /**
+     * @var string
+     */
+    protected $endBlockTagRegExp = '/@testo\s+([^\s]*)\s*}/';
+
+    /**
      * @var SourceInterface[]
      */
     protected $sources;
@@ -41,28 +51,44 @@ class Testo implements RootDirAwareInterface
     }
 
     /**
-     * @param string $templateFile
-     * @param string $documentFile
+     * @param $documentFile
+     * @throws \LogicException
      */
-    public function generate($templateFile, $documentFile)
+    public function generate($documentFile)
     {
-        $this->rootDir = dirname($templateFile);
+        $this->rootDir = dirname($documentFile);
 
         $document = array();
-        foreach (file($templateFile) as $line) {
-            $lineReplaced = false;
+        $documentLines = file($documentFile);
+        for ($i = 0, $n = count($documentLines); $i < $n; $i++) {
+            $line = $documentLines[$i];
+            $document[] = $line;
             foreach ($this->sources as $source) {
-                $content = $source->getContent($line);
+                $content = $source->getContent(rtrim($line, "\n{ "));
                 if (is_array($content)) {
-                    $lineReplaced = true;
                     foreach ($this->filters as $filter) {
                         $content = $filter->filter($content);
                     }
-                    $document[] = $this->unShiftCode(implode($content));
+                    $block = '';
+                    $i++;
+                    while (!$this->isEndBlockTag($documentLines[$i])) {
+                        $block .= $documentLines[$i];
+                        $i++;
+                    }
+                    $endBlockLine = $documentLines[$i];
+                    $parsedHash = $this->parseHashFromEndBlockLine($endBlockLine);
+                    if (!$this->isBlockValid($block, $parsedHash)) {
+                        throw new \LogicException(sprintf(
+                            "Block changed externally\n\nFile is '%s'\nLine is '%s'\nCode is '%s'",
+                            $documentFile,
+                            $line,
+                            $block
+                        ));
+                    }
+                    $code = $this->unShiftCode(implode($content));
+                    $document[] = $code;
+                    $document[] = $this->getEndTag($this->hash($code));
                 }
-            }
-            if (!$lineReplaced) {
-                $document[] = $line;
             }
         }
 
@@ -71,6 +97,7 @@ class Testo implements RootDirAwareInterface
 
     /**
      * @param string $code
+     *
      * @return string
      */
     protected function unShiftCode($code)
@@ -91,5 +118,67 @@ class Testo implements RootDirAwareInterface
     public function getRootDir()
     {
         return $this->rootDir;
+    }
+
+    /**
+     * @param string $line
+     *
+     * @return bool
+     */
+    protected function isEndBlockTag($line)
+    {
+        return preg_match($this->endBlockTagRegExp, $line, $placeholders);
+    }
+
+    /**
+     * @param string $code
+     *
+     * @return string
+     */
+    protected function hash($code)
+    {
+        return md5($code);
+    }
+
+    /**
+     * @param string $hash
+     *
+     * @return string
+     */
+    protected function getEndTag($hash)
+    {
+        return str_replace('{hash}', $hash, $this->endBlockTagMask);
+    }
+
+    /**
+     * @param string $line
+     *
+     * @return string
+     */
+    protected function parseHashFromEndBlockLine($line)
+    {
+        $placeholders = array();
+        if (preg_match($this->endBlockTagRegExp, $line, $placeholders)) {
+
+            return $placeholders[1];
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $block
+     * @param string $validHash
+     *
+     * @return bool
+     */
+    protected function isBlockValid($block, $validHash)
+    {
+        if ($block == '' && $validHash == '') {
+
+            return true;
+        }
+
+        return $this->hash($block) == $validHash;
     }
 }

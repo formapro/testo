@@ -18,6 +18,10 @@ class TestoTest extends \PHPUnit_Framework_TestCase
             array(__DIR__ . '/files/with_uncomment.tpl', __DIR__ . '/files/with_uncomment.txt'),
             array(__DIR__ . '/files/with_multiline_uncomment.tpl', __DIR__ . '/files/with_multiline_uncomment.txt'),
             array(__DIR__ . '/files/with_class.tpl', __DIR__ . '/files/with_class.txt'),
+            array(
+                __DIR__ . '/files/with_generated_valid_hash.tpl',
+                __DIR__ . '/files/with_generated_valid_hash.txt'
+            ),
         );
     }
 
@@ -26,13 +30,28 @@ class TestoTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideTestData
      */
-    public function shouldGenerateExpectedDocumentFromTemplate($templateFile, $expectedFile)
+    public function shouldGenerateExpectedDocumentFromTemplate($documentFile, $expectedFile)
     {
-        $actualFile = tempnam(sys_get_temp_dir(), 'testo');
+        $documentFileCopy = $documentFile . '~';
+        copy($documentFile, $documentFileCopy);
 
         $testo = new Testo();
-        $testo->generate($templateFile, $actualFile);
+        $testo->generate($documentFileCopy);
 
-        $this->assertFileEquals($expectedFile, $actualFile);
+        $this->assertFileEquals($expectedFile, $documentFileCopy);
+        unlink($documentFileCopy);
+    }
+
+    /**
+     * @test
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Block changed externally
+     */
+    public function shouldThrowExternalBlockChangeExceptionIfHashIsInvalid()
+    {
+        $file = __DIR__ . '/files/with_generated_invalid_hash.tpl';
+
+        $testo = new Testo();
+        $testo->generate($file);
     }
 }
