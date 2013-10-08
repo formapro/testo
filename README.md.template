@@ -1,11 +1,11 @@
 Testo [![Build Status](https://secure.travis-ci.org/formapro/testo.png?branch=master)](http://travis-ci.org/formapro/testo)
 =====
 
-Do you remember those outdated examples in a documentation?.
+Do you remember those outdated examples in a documentation?
  
-Or times while updating documents you had to test examples manually? 
+Or times when you had to test examples manually while updating documents? 
 
-This days in the past. Testo come into play.
+These days are in the past. Testo comes into play.
 
 Example 
 =======
@@ -22,7 +22,7 @@ and there is a class:
 {{testo:examples/Testo/Examples/Hello.php}}
 ```
 
-So after you run `Testo` there will be clean `README.md`:
+So after you run `Testo` there will be a clean `README.md`:
 
 ```
 {{testo:examples/Testo/Examples/README.md.expected}}
