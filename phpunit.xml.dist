@@ -15,7 +15,7 @@
         <listener class="Testo\Phpunit\ReGenerateDocsOnSuccessListener" file="src/Testo/Phpunit/ReGenerateDocsOnSuccessListener.php">
             <arguments>
                 <array>
-                    <element key="README.md.template">
+                    <element key="README.md">
                         <string>README.md</string>
                     </element>
                 </array>

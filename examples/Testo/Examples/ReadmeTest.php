@@ -8,13 +8,11 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
      */
     public function whatsInside()
     {
-        //@testo:start
-        //include autoload.
-
+        //@testo {
         $testo = new \Testo\Testo();
 
         $testo->generate(__DIR__ . '/README.md');
-        //@testo:end
+        //@testo }
         $this->assertFileEquals(__DIR__ . '/README.md.expected', __DIR__ . '/README.md');
     }
 }

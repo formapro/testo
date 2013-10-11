@@ -10,39 +10,39 @@ This days in the past. Testo come into play.
 Example 
 =======
 
-Let's say you have a `README.md.template`:
+Let's say you have a `README.md`:
 
 ```
+@testo examples/Testo/Examples/README.md {
 Some description of the awesome code:
 
 <?php
-{{testo:Testo\Examples\Hello::world}}
+@testo Testo\Examples\Hello world {
+echo 'hello world!';
+@testo 1abb62086e2cc233ede1e19de3a8e5f6 }
 ?>
+@testo 35a8d2d426c05614551484dcdd450f37 }
 ```
 
 and there is a class: 
 
 ```php
-<?php
-namespace Testo\Examples;
-
-class Hello
-{
-    public function world()
-    {
-        echo 'hello world!';
-    }
-}
+// @testo Testo\Examples\Hello {
+// @testo }
 ```
 
 So after you run `Testo` there will be clean `README.md`:
 
 ```
+@testo examples/Testo/Examples/README.md.expected {
 Some description of the awesome code:
 
 <?php
+@testo Testo\Examples\Hello world {
 echo 'hello world!';
+@testo 1abb62086e2cc233ede1e19de3a8e5f6 }
 ?>
+@testo 35a8d2d426c05614551484dcdd450f37 }
 ```
 
 What's inside?
@@ -50,9 +50,6 @@ What's inside?
 
 ```php
 <?php
-//include autoload.
-
-$testo = new \Testo\Testo();
-
-$testo->generate(__DIR__.'/README.md.template', __DIR__.'/README.md');
+// @testo Testo\Examples\ReadmeTest whatsInside {
+// @testo }
 ```
